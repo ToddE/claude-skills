@@ -10,7 +10,6 @@ description: >
   interviewing the user for context, then generating a structured PR/FAQ with press release,
   stakeholder quotes, external FAQ, and internal FAQ.
 ---
-
 *Author: Todd Emerson — https://github.com/toddemerson/claude-skills — CC BY 4.0*
 
 # Working Backwards PR/FAQ Skill
@@ -36,29 +35,61 @@ structure, and FAQ question bank. Always read this file before generating a PR/F
 
 ## Workflow
 
-### Step 1: Intake
+### Step 1: Intake (Guided Conversation)
 
-When the user starts a new PR/FAQ conversation, do NOT generate the document immediately.
-Greet the user and ask them to provide at minimum:
+Do NOT generate the PR/FAQ immediately. Do NOT dump all your questions at once. Walk the
+user through a guided conversation, one step at a time. Each step builds on the previous
+answer. Wait for the user to respond before moving to the next step.
 
-1. **The Gist**: Primary organizations involved, what is being announced, and the core
-   customer benefit.
-2. **Key Stakeholders**: Who should be quoted and what their title or angle is.
-3. **Additional Notes**: Specific initiatives, data points, prior context, or constraints
-   that must be included.
+The intake has 5 stages. Move through them in order, but be flexible. If the user
+volunteers information that covers a later stage, acknowledge it and skip ahead. If the
+user's answer is vague, ask a focused follow-up before moving on. The goal is to have a natural conversation that progressively builds the context you need.
 
-Ask clarifying questions to fill gaps. You need enough information to write a credible,
-specific document. Vague inputs produce vague PR/FAQs, and vague PR/FAQs get rejected.
-Push the user to be specific about the customer segment, the problem, and why the solution
-is better than what exists today.
+**Stage 1: What's the announcement?**
+Start here. Greet the user and ask one simple question: "What are you announcing?"
+Let them describe it in their own words. Don't structure this for them. You're listening
+for: what the product/initiative/partnership is, who's involved, and why it matters.
 
-Common clarifying questions (use judgment on which to ask):
-- Who exactly is the target customer? Be as specific as possible.
-- What problem does this solve, and how are customers solving it today?
-- What makes this meaningfully better, faster, or cheaper than existing solutions?
-- What is the planned launch date or timeframe?
-- Are there any competitive dynamics or partnerships to address?
-- What are the biggest risks or open questions?
+**Stage 2: Who is the customer?**
+Based on their answer, ask about the target customer. Use the form tool here to help
+them narrow it down. Present options if the customer type is inferable from context
+(e.g., "B2B enterprise buyers," "individual consumers," "developers," "healthcare
+providers"), but always include a free-text option. Then ask a follow-up in free text:
+"What problem does this solve for them, and how are they dealing with it today?"
+
+This is the most important stage. If the customer or the problem is vague, the PR/FAQ
+will be weak. Push for specifics. "Small businesses" is not specific enough. "Independent retail store owners with 1-5 locations who currently manage inventory in spreadsheets" is specific enough.
+
+**Stage 3: What makes it different?**
+Ask what makes this meaningfully better, faster, or cheaper than what the customer uses
+today. If they struggle to articulate this, that's a signal the value proposition needs
+more work. Help them think it through, but note it honestly. A PR/FAQ that can't answer
+"so what?" will fail review.
+
+**Stage 4: Stakeholders and quotes**
+Use the form tool to ask how many stakeholders should be quoted (2-3 is typical, 4+ is
+unusual). Then for each stakeholder, ask for their name, title, and the angle their quote
+should take. This can be brief. Example: "Sarah Chen, CEO. Angle: why this matters to
+the company's mission."
+
+**Stage 5: Timeline and additional context**
+Use the form tool for launch timeframe (e.g., "Q3 2026," "Q4 2026," "Q1 2027," "Not
+sure yet"). Then ask in free text: "Anything else I should know? Specific data points,
+constraints, context, or things you definitely want included?"
+
+After Stage 5, summarize what you've gathered in a short recap (5-8 sentences) and
+confirm with the user before generating. This gives them a chance to correct anything
+and signals that you're about to shift from conversation to document creation.
+
+**Adaptation rules:**
+- If the user provides a detailed brief upfront that covers most stages, don't
+  mechanically walk through every stage. Acknowledge what they've given you, ask about
+  whatever is missing, and move to generation.
+- If this is a revision of an existing PR/FAQ, skip intake and go straight to the edit.
+- If the user seems impatient or says "just write it," do your best with what you have,
+  note your assumptions, and generate. You can always iterate.
+- Never ask more than one question per message unless you're using the form tool to
+  bundle related structured choices.
 
 ### Step 2: Generate the PR/FAQ
 
@@ -83,9 +114,13 @@ structure:
 
 [Getting started / call to action]
 
+---
+
 # Additional Quotes
 
 [Quotes from secondary stakeholders not in the main body]
+
+---
 
 # FAQ
 
@@ -107,6 +142,7 @@ not a finished product.
 ## Writing Rules
 
 These rules apply to all PR/FAQ output. They are non-negotiable.
+
 
 ### Tone and Style
 - Be direct, concise, and confident without being boastful.
