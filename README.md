@@ -6,6 +6,8 @@ A collection of skills for [Claude AI](https://claude.ai). Skills extend Claude 
 
 ### Working Backwards PR/FAQ | [Download (.skill)](https://github.com/ToddE/claude-skills/raw/main/working-backwards-prfaq.skill)
 
+**Using Gemini? → [Try this similar Gemini Gem](https://gemini.google.com/gem/1STzL1kLVqmZ1-UugsA_6QYbRAQNiKQYw?usp=sharing)**
+
 Generates Amazon-style Working Backwards PR/FAQ documents for new products, partnerships, or initiatives.
 
 **Triggers when you mention:** PR/FAQ, press release FAQ, Working Backwards, product announcement draft, launch announcement, product vision document, or narrative product proposal in the Amazon style.
