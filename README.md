@@ -43,4 +43,4 @@ You are free to use, adapt, and redistribute these skills — including commerci
 
 > Skills by Todd Emerson — [github.com/ToddE/claude-skills](https://github.com/ToddE/claude-skills)
 
-CC BY 4.0 is recommended for skills (which are primarily instructional prompts and documentation rather than executable code) because it has explicit, widely understood attribution requirements. If you incorporate a skill into a software project, MIT is also acceptable — just preserve the copyright notice.
+
