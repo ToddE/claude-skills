@@ -1,10 +1,10 @@
 # Claude Skills
 
-A collection of skills for [Claude Code](https://claude.ai/code). Skills extend Claude with specialized workflows that trigger automatically based on context.
+A collection of skills for [Claude AI](https://claude.ai). Skills extend Claude with specialized workflows that trigger automatically based on context.
 
 ## Available Skills
 
-### [working-backwards-prfaq](working-backwards-prfaq/)
+### [working-backwards-prfaq](working-backwards-prfaq/) | <span style="font-size: 0.8em; color: red;">[Download Skill File](/working-backwards-prfaq.skill)</span>
 
 Generates Amazon-style Working Backwards PR/FAQ documents for new products, partnerships, or initiatives.
 
@@ -34,20 +34,6 @@ Once installed, the skill activates automatically when your message matches its 
 
 You can also invoke a skill explicitly by describing what you want in terms the skill understands (e.g., "let's do a PR/FAQ").
 
-## Building Your Own Skills
-
-Each skill in this repo follows the same structure:
-
-```
-skill-name/
-  SKILL.md          # Instructions and trigger conditions (what Claude reads)
-  references/       # Supporting documents Claude can read during execution
-  evals/            # Test cases for validating skill behavior
-```
-
-`SKILL.md` contains a YAML frontmatter block with the skill's `name`, `description`, and trigger logic, followed by the full instructions Claude follows when the skill activates.
-
-To package a skill for distribution, zip the skill directory and rename it to `skill-name.skill`.
 
 ## License
 
