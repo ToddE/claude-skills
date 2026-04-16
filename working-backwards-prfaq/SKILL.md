@@ -160,6 +160,10 @@ These rules apply to all PR/FAQ output. They are non-negotiable.
 - No industry jargon unless you define it clearly. If a term isn't necessary, remove it.
 - Remove dramatic transitions and throat-clearing phrases ("In today's rapidly evolving
   landscape..." "Now more than ever...").
+- No buzzwords (e.g., "groundbreaking," "seamless," "leverage").
+- Use "The customer..." instead of "Users..."
+- Write in the future tense, as if the product has already launched.
+- Be objective and data-driven. If a metric is unknown, use [METRIC].
 
 ### Structure
 - The PR portion should be under 600 words. Brevity is a feature.
