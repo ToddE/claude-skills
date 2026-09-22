@@ -1,0 +1,35 @@
+name: Release skills
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build .skill zip for each skill directory
+        run: |
+          mkdir -p dist
+          for dir in */; do
+            name="${dir%/}"
+            if [ -f "$name/SKILL.md" ]; then
+              echo "Packaging $name"
+              zip -r "dist/${name}.skill" "$name" -x '*.DS_Store'
+            fi
+          done
+          ls -la dist
+
+      - name: Create release and upload skills
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*.skill
+          generate_release_notes: true

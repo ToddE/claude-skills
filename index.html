@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claude Skills</title>
+<meta name="description" content="A collection of skills for Claude AI: writing rules, PR/FAQ documents, a full use-case-to-tracker-issue pipeline, and architecture recommendations.">
+<style>
+  :root { color-scheme: light dark; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    max-width: 680px;
+    margin: 3rem auto;
+    padding: 0 1.25rem;
+    line-height: 1.55;
+    color: #1a1a1a;
+    background: #fff;
+  }
+  @media (prefers-color-scheme: dark) {
+    body { color: #e6e6e6; background: #121212; }
+    a { color: #7db8ff; }
+    .card { border-color: #333; }
+    code { background: #1e1e1e; }
+  }
+  h1 { font-size: 1.6rem; margin-bottom: 0.25rem; }
+  p.tagline { color: #666; margin-top: 0; }
+  @media (prefers-color-scheme: dark) { p.tagline { color: #999; } }
+  .card {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+    margin: 1.75rem 0;
+  }
+  .cta {
+    display: inline-block;
+    padding: 0.7rem 1.3rem;
+    border-radius: 8px;
+    background: #d97757;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    margin-top: 0.75rem;
+  }
+  .cta:hover { opacity: 0.9; }
+  ul.skills li { margin-bottom: 0.4rem; }
+  code { background: #f2f2f2; padding: 0.1rem 0.35rem; border-radius: 4px; font-size: 0.9em; }
+  footer { margin-top: 2.5rem; font-size: 0.85rem; color: #888; }
+</style>
+</head>
+<body>
+
+<h1>Claude Skills</h1>
+<p class="tagline">Seven skills for Claude AI: a writing baseline, a PR/FAQ generator, a full use-case-to-tracker-issue pipeline, and architecture recommendations.</p>
+
+<div class="card">
+  <strong>Start with a product idea.</strong>
+  <p>Click below to open a new claude.ai chat, pre-loaded with the whole planning flow: Working Backwards PR/FAQ first, then use case discovery, use case writing, test cases, and requirements, as the conversation gets there. Uses your own claude.ai account and session.</p>
+  <a class="cta" id="get-started" href="#" target="_blank" rel="noopener">Get started in claude.ai &rarr;</a>
+  <p style="font-size:0.85rem;color:#888;margin-top:0.75rem;">
+    This asks Claude to fetch skill files from GitHub as needed, so it needs a claude.ai plan with web fetching enabled. If it doesn't work, copy
+    <a href="https://raw.githubusercontent.com/ToddE/claude-skills/main/working-backwards-prfaq/SKILL.md" target="_blank">this SKILL.md link</a>
+    into a new chat yourself and ask Claude to follow it.
+  </p>
+  <p style="font-size:0.85rem;color:#888;margin-top:0.5rem;">
+    This opens with whatever model your account defaults to, often Opus. None of these skills need it; switch to Sonnet 5 in the model picker once the chat opens for a faster, cheaper run.
+  </p>
+</div>
+
+<p>Working Backwards PR/FAQ is the natural entry point: it clarifies what you're building and why before anything else. From there, the other skills pick up the thread: breaking the idea into use cases, writing each one out, generating test cases, and deriving trackable requirements you can export to Jira or GitHub Issues. Once there's enough to work with, Architect Review turns it into a structured build recommendation.</p>
+
+<ul class="skills">
+  <li><strong>Clean Style</strong>: an anti-AI-slop checklist every other skill's output defers to.</li>
+  <li><strong>Working Backwards PR/FAQ</strong>: press release, FAQ, and business case for a new idea.</li>
+  <li><strong>Use Case Discovery</strong>: breaks a feature down into a candidate list of use cases.</li>
+  <li><strong>Use Case UML</strong>: writes a use case in a fixed, repeatable format.</li>
+  <li><strong>Use Case Test Cases</strong>: generates test cases from a use case's paths.</li>
+  <li><strong>Use Case Requirements</strong>: derives trackable requirements, with or without a use case.</li>
+  <li><strong>Architect Review</strong>: a structured architecture recommendation from a specific Sr. Architect persona.</li>
+</ul>
+
+<p>Full details, install instructions, and downloads: <a href="https://github.com/ToddE/claude-skills">github.com/ToddE/claude-skills</a></p>
+
+<footer>Skills by Todd Emerson &middot; <a href="https://github.com/ToddE/claude-skills/blob/main/LICENSE">CC BY 4.0</a></footer>
+
+<script>
+  var prompt = "I have a product idea and want to work through the full planning flow from the Claude Skills "
+    + "repo (https://github.com/ToddE/claude-skills) in this chat, fetching each skill's SKILL.md from raw.githubusercontent.com "
+    + "as we reach that stage. Start by fetching https://raw.githubusercontent.com/ToddE/claude-skills/main/working-backwards-prfaq/SKILL.md "
+    + "and follow it to help me write a Working Backwards PR/FAQ. Once that's done, offer to continue into use case discovery "
+    + "(use-case-discovery/SKILL.md), writing each use case (use-case-uml/SKILL.md), test cases (use-case-test-cases/SKILL.md), "
+    + "and functional requirements (use-case-requirements/SKILL.md), fetching each one from that repo when we get there. "
+    + "Start with your first question for the PR/FAQ.";
+  document.getElementById("get-started").href = "https://claude.ai/new?q=" + encodeURIComponent(prompt);
+</script>
+
+</body>
+</html>
