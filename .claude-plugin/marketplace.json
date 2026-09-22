@@ -1,0 +1,44 @@
+{
+  "name": "claude-skills",
+  "owner": {
+    "name": "A. Todd Emerson",
+    "url": "https://github.com/ToddE/claude-skills"
+  },
+  "plugins": [
+    {
+      "name": "clean-style",
+      "source": "./clean-style",
+      "description": "Apply a strict anti-AI-slop writing checklist to external-facing prose. The shared baseline other skills in this repo defer to."
+    },
+    {
+      "name": "working-backwards-prfaq",
+      "source": "./working-backwards-prfaq",
+      "description": "Generate Amazon-style Working Backwards PR/FAQ documents for any kind of announcement: a product, partnership, nonprofit initiative, or campaign."
+    },
+    {
+      "name": "use-case-discovery",
+      "source": "./use-case-discovery",
+      "description": "Interview about a feature at a high level and decompose it into a candidate list of use cases before any of them get fully written up."
+    },
+    {
+      "name": "use-case-uml",
+      "source": "./use-case-uml",
+      "description": "Write UML-style integration use cases (actors, basic path, alternate paths, exception paths, post-conditions) in a fixed, repeatable structure."
+    },
+    {
+      "name": "use-case-test-cases",
+      "source": "./use-case-test-cases",
+      "description": "Generate test cases from a completed use case's Basic/Alternate/Exception Paths, with expected results traced to its Post-Condition(s)."
+    },
+    {
+      "name": "use-case-requirements",
+      "source": "./use-case-requirements",
+      "description": "Derive trackable functional requirements from a use case or a short interview, exported as Jira-importable CSV or GitHub Issues markdown."
+    },
+    {
+      "name": "architect-review",
+      "source": "./architect-review",
+      "description": "Produce a structured architectural recommendation from a specific Sr. Architect persona's point of view, with an opt-in debate between personas."
+    }
+  ]
+}
