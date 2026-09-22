@@ -1,0 +1,7 @@
+# Test Cases: Auto-Route a New Job
+
+| Test Case ID | Title | Covers | Preconditions | Steps | Expected Result |
+| --- | --- | --- | --- | --- | --- |
+| TC-AutoRoute-01 | Successful auto-assignment | Basic Path | Shop is onboarded; at least one technician is registered and available. | 1. Enter job details (address, service type, time window). 2. Observe the assignment. | The job is assigned to a technician, added to their route, and visible to the Dispatcher on the schedule board. |
+| TC-AutoRoute-02 | Two technicians tie for soonest arrival | Alternate Path A | Same as TC-01, plus two technicians have identical estimated drive times to the job. | 1. Enter job details where two technicians tie on drive time. 2. Observe which technician gets the job. | The job is assigned to the technician with the lighter current job load; the use case proceeds to complete assignment as in the Basic Path (rejoins at Basic Path #4). |
+| TC-AutoRoute-03 | No technician can make the requested window | Exception Path A | Same as TC-01, except no technician's schedule and drive time can meet the requested window. | 1. Enter job details with a time window no technician can meet. 2. Observe the Dispatcher notification. 3. Adjust the time window or reassign another job. | The job is flagged as unassigned and the Dispatcher is notified; no technician is assigned until the Dispatcher takes action (rejoin at Basic Path #2, not the Basic Path's assigned-job outcome). |

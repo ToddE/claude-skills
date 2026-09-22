@@ -1,0 +1,6 @@
+# Local skill install used for testing (symlinks into this repo's own skill folders)
+.claude/
+
+# OS and editor junk
+.DS_Store
+*.swp
