@@ -8,29 +8,12 @@ SKILL.md also documents. This run exists only to test that standalone path: five
 unrelated cold invocations, one per downstream skill, with no shared context between them
 and no PR/FAQ or upstream use case behind any of them.
 
-## Before intake: tool-call attempt, and why the rest of this run is manual
-
-Before running anything by hand, this run called the real `Skill` tool directly:
-`Skill(skill: "use-case-discovery")`. It returned `Unknown skill: use-case-discovery`. This
-is not the same failure mode as the previously documented `working-backwards-prfaq`
-collision (where a same-named skill from a different plugin loads silently and answers
-instead of erroring) — here the tool refused outright, meaning none of the five
-`product-management` use-case skills are registered as callable in this session at all, not
-even under a colliding name. Since the task anticipated this general class of problem and
-prescribed the same fallback for it ("read that skill's actual current SKILL.md/references
-files directly ... and execute that documented procedure by hand instead, exactly like the
-continental-circuits and ebisu-kikata runs did"), that is what every one of the five sections
-below does: each skill's current `SKILL.md` and `references/format.md` (and, for
-architect-review, both persona files) were read in full first, and its documented workflow
-was then followed step by step, by hand, self-answering as a plausible user.
-
-Each of the five scenarios below is deliberately unrelated to the others and to every
-existing example in this repo (food pantry volunteer scheduling, warehouse returns
-processing, a public library hold pickup, a two-factor-authentication reminder banner, and a
-two-person budgeting app), specifically so nothing here could be mistaken for implicit
-chaining or shared context.
-
----
+*(This run hit a skill-registration failure before starting, and worked around it by
+following each skill's own SKILL.md by hand; see `README.md` for that finding rather than
+repeating it here. `dialogue.md` covers only the actual replay: five separate, unrelated
+cold invocations, one per downstream skill, deliberately unconnected to each other and to
+every other run in this repo, so nothing here could be mistaken for implicit chaining or
+shared context.)*
 
 ## use-case-discovery (standalone)
 

@@ -7,29 +7,9 @@ content honestly rather than re-deriving it, neither of which the five prior run
 non-commercial meta announcement, a city-department program, a for-profit home-service
 SaaS, an education-sector cold run, and a capital-intensive chip-manufacturing run) tested.
 
-## Before intake: the same namespace collision, confirmed again, tried for real
-
-Before running `working-backwards-prfaq`'s intake, this run called the real `Skill` tool:
-`Skill(skill: "working-backwards-prfaq")`. It launched successfully but loaded an unrelated
-skill from a different plugin (`anthropic-skills`), not this repo's own
-`product-management/skills/working-backwards-prfaq`. Confirmed by diffing the loaded
-instructions against `../../skills/working-backwards-prfaq/SKILL.md` directly: the loaded
-version has no audience-generalization language (it's commercial-product-only, "the
-customer" hard-coded rather than "whoever is served"), no clean-style deferral section, and
-no use-case-discovery handoff offer, all of which this repo's actual file has.
-
-This is not a new finding. It's the exact collision `2026-09-22-classpods-cold-run/README.md`
-documented first and `2026-09-22-continental-circuits/dialogue.md` confirmed again: the
-`product-management` plugin isn't installed in this session, and a same-named skill from
-another plugin silently answers instead of erroring. This run does not re-report it as new.
-Per the same workaround every non-cold prior run used, this run read
-`product-management/skills/working-backwards-prfaq/SKILL.md` and
-`references/methodology.md` directly from this repo and executed that documented procedure
-by hand, stage by stage, self-answering as Ebisu Kaiten-Zushi's founder. `clean-style` and
-`use-case-discovery`'s underlying instructions are genuinely present as project-scoped
-skills in this session (confirmed by `Skill(skill: "clean-style")` loading from
-`/home/emerson/Workspace/claude-skills/.claude/skills/clean-style`, this repo's own copy,
-not a colliding one), so those two were invoked for real through the `Skill` tool.
+*(This run hit the same skill-namespace collision documented in prior runs' READMEs before
+intake; see `README.md` for that finding rather than repeating it here. `dialogue.md` covers
+only the actual pipeline replay.)*
 
 ## working-backwards-prfaq intake
 
@@ -88,26 +68,7 @@ leans on tag durability, RFID hardware unit economics, and staff-adoption risk i
 the compliance or supply-chain risk language the prior manufacturing and healthcare-adjacent
 runs used.
 
-### Self-check: clean-style (real skill, genuinely installed in this project)
-
-`clean-style` loaded from this repo's own `.claude/skills/clean-style` directly (confirmed
-by the base directory printed in the launch), so this is a real invocation, not a manual
-simulation. Findings from applying `references/rules.md` to the drafted `01-prfaq.md`:
-
-- **Undefined jargon on first use**: "kaiten-zushi" appeared in the press release's dateline
-  paragraph before any reader unfamiliar with the term would know what it means, even
-  though the headline glosses it as "conveyor-belt sushi." Fixed by adding an inline
-  parenthetical gloss on the term's first full-sentence use: "an 18-location kaiten-zushi
-  (conveyor-belt sushi) chain."
-- Checked and passed: no em-dashes, no sentences opening with a broad quantifier
-  ("Every"/"All"/"Each"; this was a known pattern flagged and fixed in the
-  `continental-circuits` run, and this draft was written to avoid it from the start rather
-  than fixed after the fact), no passive-voice placeholder pattern like
-  `dispatchiq`'s/`continental-circuits`'s "[X] to be finalized before general availability"
-  (this draft used "Ebisu Kaiten-Zushi finalizes pricing tiers" instead, active voice, on
-  the first pass), no contrastive antithesis, no "real" used as a throwaway intensifier.
-
-No other violations found.
+**Claude:** Ran `clean-style` against the drafted PR/FAQ before presenting it. One fix: "kaiten-zushi" appeared in the press release's dateline paragraph before a reader unfamiliar with the term would know what it means, even though the headline glosses it as "conveyor-belt sushi." Added an inline parenthetical gloss on its first full-sentence use instead. No other violations found.
 
 ## use-case-discovery
 
