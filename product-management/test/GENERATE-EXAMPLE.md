@@ -38,6 +38,17 @@ is what makes these runs worth reading.
 3. **Use Case Discovery**, then **Use Case UML** for at least two use cases, cross-linked
    and actor-consistent, each its own lettered file (`03a-`, `03b-`, ...). One use case
    isn't realistic; most initiatives have several.
+
+   A confirmed candidate and PR/FAQ excuse skipping the *interview*, not the *confirmation*.
+   Per `use-case-uml/SKILL.md` Step 1, draft each use case's Basic Path, Alternate/Exception
+   Paths, and Post-Condition(s) directly from that upstream context, but then present the
+   draft and get a real answer, an actual back-and-forth in `dialogue.md`, before treating it
+   as final. A PR/FAQ describes what an initiative is and why; it does not contain the flow's
+   step-by-step mechanics, so silently generating a full use case from it and moving on is not
+   a shortcut this skill authorizes. This applies to every downstream skill, not just
+   use-case-uml: check each one's own SKILL.md for what it actually permits skipping versus
+   what it only permits skipping the *re-derivation* of. Don't assume "don't re-ask what's
+   already given" means "don't confirm anything."
 4. **Use Case Test Cases** and **Use Case Requirements** for each use case (lettered to
    match, `04a-`/`05a-`, `04b-`/`05b-`, ...).
 5. **Architect Review**: both personas, each its own file (`06a-`, `06b-`), plus the opt-in
@@ -47,9 +58,14 @@ is what makes these runs worth reading.
    use-case-requirements' granularity check. If a self-check catches a real bug in the
    skill itself (not just this run's content), fix the skill and record the finding; don't
    just patch this run's output and move on.
-7. **Save every stage's real prompts and self-answers to `dialogue.md`** as you go. Not
-   reconstructed afterward from memory; the point of `dialogue.md` is to show what was
-   actually asked and answered.
+7. **Save every stage's real prompts and self-answers to `dialogue.md`** as you go, as actual
+   `**Claude:**` / `**User (simulated):**` turns, not third-person narration about what
+   happened. Not reconstructed afterward from memory; the point of `dialogue.md` is to show
+   what was actually asked and answered, and playback on the examples page only renders real
+   turns and section dividers, so prose that never took the form of a turn won't show up
+   there at all. Any stage with nothing to confirm (test-cases' mechanical extraction,
+   architect-review working from whatever artifacts exist) legitimately has no turns of its
+   own; that's fine and should render as a quick pass-through, not padded with fake dialogue.
 8. **Write a `README.md`** in the run's folder: what this run stressed, what passed, what
    you found and fixed, what's still open.
 9. **If a finding points to a real skill fix** (not just this run's content), add it to the
@@ -63,6 +79,7 @@ artifacts, a `README.md` with findings.
 
 ## After the run exists
 
-If this run is meant for the GitHub Pages gallery, add one entry to the `examples` array in
-`../../../index.html`'s script (name, slug, one-line blurb). No other page changes needed;
-the "Random example" button already samples from that array.
+If this run is meant for the GitHub Pages gallery, add one entry to the `EXAMPLES` array in
+`../../../examples.html`'s script (slug, name, blurb, `hasDialogue`, and a short `artifacts`
+list of the run's most worth-reading files). No other page changes needed; the picker and
+playback both read from that array.
