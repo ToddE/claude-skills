@@ -16,19 +16,8 @@
     color: #1a1a1a;
     background: #fff;
   }
-  @media (prefers-color-scheme: dark) {
-    body { color: #e6e6e6; background: #121212; }
-    a { color: #7db8ff; }
-    select, button.ctl { background: #1e1e1e; border-color: #444; color: #e6e6e6; }
-    .bubble.claude { background: #1e2530; }
-    .bubble.user { background: #2a2418; }
-    .divider { color: #888; border-color: #333; }
-    .transcript { border-color: #333; }
-    .results { border-color: #333; background: #161616; }
-  }
   h1 { font-size: 1.5rem; margin-bottom: 0.25rem; }
   p.tagline { color: #666; margin-top: 0; }
-  @media (prefers-color-scheme: dark) { p.tagline { color: #999; } }
   .controls { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin: 1rem 0; }
   select, button.ctl {
     font: inherit;
@@ -83,6 +72,26 @@
   .results ul { padding-left: 1.1rem; margin: 0.5rem 0; }
   .results li { margin-bottom: 0.3rem; }
   footer { margin-top: 2.5rem; font-size: 0.85rem; color: #888; }
+
+  /* Dark-mode overrides come last on purpose: several rules above (button.ctl,
+     .bubble.claude/.user, .transcript, .results) are declared after this block would
+     otherwise sit, and CSS resolves equal-specificity conflicts by source order, not by
+     which query is "more specific" to the user's actual preference. Keeping every
+     dark-mode override here, after all base rules, is what makes them actually win. */
+  @media (prefers-color-scheme: dark) {
+    body { color: #e6e6e6; background: #121212; }
+    a { color: #7db8ff; }
+    p.tagline { color: #999; }
+    select, button.ctl { background: #1e1e1e; border-color: #444; color: #e6e6e6; }
+    button.ctl.active { background: #d97757; color: #fff; border-color: #d97757; }
+    .note { color: #999; }
+    .divider { color: #888; border-color: #333; }
+    .bubble.claude { background: #1e2530; color: #e6e6e6; }
+    .bubble.user { background: #2a2418; color: #e6e6e6; }
+    .transcript { border-color: #333; }
+    .results { border-color: #333; background: #161616; }
+    footer { color: #999; }
+  }
 </style>
 </head>
 <body>
