@@ -107,22 +107,19 @@ use cases from the confirmed PR/FAQ brief (see `02-use-case-candidates.md`).
 
 ## use-case-uml
 
-Followed `use-case-uml/SKILL.md` Steps 1-2 to draft both use cases from the confirmed
-candidates, focusing the conversation on Basic Path, Alternate/Exception Paths, and
-Post-Condition(s) since Name, Summary, and Rough Actors already came from discovery.
+**Claude:** Drafting both use cases from the confirmed candidates. Per `use-case-uml/SKILL.md` Step 1, since both trace back to a confirmed candidate and the PR/FAQ, each gets drafted directly from that context rather than interviewed from scratch, then presented for confirmation.
 
-**Step 3 self-check, run for real, found one genuine issue:** in the first draft of
-`03b-allocate-chipset-inventory-to-a-production-run.md`, "Sourcing Manager" was listed as
-an Actor but appeared only in the Exception Paths, never in the Basic Path itself. The
-skill's own Step 3 checklist requires every listed Actor to appear at least once in the
-Basic Path. This is the same category of bug the `dispatchiq` run's own README documents
-finding and fixing (an unused-in-Basic-Path "Technician" actor there). Fixed here by giving
-Sourcing Manager a real Basic Path step: Continental ERP notifies Sourcing Manager of the
-confirmed allocation for supply-constrained chips, and Sourcing Manager acknowledges it,
-reflecting that Sourcing tracks consumption against supplier capacity commitments on every
-run, not only when there's a shortage. This was a content fix to this run's output, not a
-change to `use-case-uml/SKILL.md` itself, since the self-check step that caught it worked
-exactly as written.
+**Claude:** Drafted "Qualify a New Chipset Supplier": Sourcing Manager submits a candidate, Continental ERP requests fab-location, export-control, and capacity documentation, Compliance reviews it against sourcing policy (U.S./EU fab, not on the FCC Covered List) and approves or rejects. Branches for incomplete documentation, a policy failure, and a non-responsive candidate. Does Compliance approving directly, with no second sign-off, match how qualification actually works today?
+
+**User (simulated):** Matches it. Compliance has final say on sourcing policy, no second approver needed. One thing to add: if a candidate is rejected for a policy failure, can they ever resubmit, say after moving their fab?
+
+**Claude:** That's a genuine open question this draft doesn't resolve, whether a rejected candidate needs a distinct "resubmission" state or just files a fresh request later. Flagging it as an Open Issue rather than guessing. Same for how long Continental ERP waits on a non-responsive candidate before flagging the case stalled, no deadline value exists yet either. See `03a-qualify-a-new-chipset-supplier.md`.
+
+**Claude:** Drafted "Allocate Chipset Inventory to a Production Run," building on 03a: Production Planner schedules a run, Continental ERP calculates required chip quantities, checks inventory against the approved-vendor list, and reserves stock. Branches for two suppliers tying on available stock, an inventory shortfall, and a shortfall that can't be resolved before the run's start date. Does the tie-break rule, reserving from whichever supplier's qualified lot has the nearer expiration, match how you'd want that decided?
+
+**User (simulated):** Yes, that's right, use up the shorter shelf life first.
+
+**Claude:** Kept it as drafted. Running the Step 3 self-check before presenting turned up a real issue: Sourcing Manager was listed as an Actor but only appeared in the Exception Paths, never the Basic Path, which the skill's own checklist flags directly. Fixed by giving Sourcing Manager a real Basic Path step: Continental ERP notifies Sourcing Manager of the confirmed allocation for supply-constrained chips, and Sourcing Manager acknowledges it, reflecting that Sourcing tracks consumption against supplier capacity commitments on every run, not only when there's a shortage. See `03b-allocate-chipset-inventory-to-a-production-run.md`.
 
 ## use-case-test-cases / use-case-requirements
 

@@ -36,7 +36,27 @@ language, and the new opt-in debate feature in `architect-review`.
 
 ## use-case-uml
 
-**Claude:** Drafted two use cases in full instead of one this time, continuing the fix from the PlotShare run: "Auto-Route a New Job" (the core dispatch logic, with a real branching decision when no technician is available) and "Notify Customer of Technician ETA" (the SMS flow the whole value proposition depends on, with a real failure mode when SMS delivery fails). See `03a-auto-route-a-new-job.md` and `03b-notify-customer-of-technician-eta.md`.
+**Claude:** Drafting two use cases in full instead of one this time, continuing the fix from the PlotShare run: "Auto-Route a New Job" (the core dispatch logic, with a real branching decision when no technician is available) and "Notify Customer of Technician ETA" (the SMS flow the whole value proposition depends on, with a real failure mode when SMS delivery fails). Per `use-case-uml/SKILL.md` Step 1, since both trace back to a confirmed candidate and PR/FAQ, each gets drafted directly from that context rather than interviewed from scratch, then presented for confirmation.
+
+**Claude:** Drafted "Auto-Route a New Job": dispatcher enters job details, DispatchIQ calculates drive time from every available technician, assigns whoever arrives soonest without exceeding their job load, and both the technician and dispatcher see the result. Branches: a tie on soonest arrival, and nobody able to make the requested window. Does "lighter current job load breaks a tie" match how you'd actually want that decided, and what should happen when nobody can make the window?
+
+**User (simulated):** Tiebreaker's right. When nobody can make the window: flag it and let the dispatcher manually adjust, don't have the system guess or auto-push the window out on its own.
+
+**Claude:** That's what's drafted: DispatchIQ flags it and notifies the Dispatcher, who manually adjusts the time window or reassigns another job to make room. One open question this surfaced: what counts as "too loaded" for a technician isn't defined yet, do you have a number, or should it stay a placeholder?
+
+**User (simulated):** No number yet, leave it a placeholder, that's genuinely not decided.
+
+**Claude:** Left `[JOB_LOAD_LIMIT]` as an Open Issue rather than guessing. See `03a-auto-route-a-new-job.md`.
+
+**Claude:** Drafted "Notify Customer of Technician ETA," building on 03a: once a technician marks a job en route, DispatchIQ calculates the ETA and texts the customer, then logs the send. One Exception Path for SMS delivery failure. Given the PR/FAQ calls silent SMS failure the single biggest risk, I drafted the failure path to retry once, then alert the Dispatcher directly rather than just logging it. Does that match the severity you want, or should a failed send do more than alert the dispatcher?
+
+**User (simulated):** That's right, alerting the dispatcher directly is exactly the point, a log entry nobody checks isn't enough for something this core.
+
+**Claude:** Kept it as drafted. Retry delay before that one retry attempt isn't specified yet, want a number or should it stay open?
+
+**User (simulated):** Leave it open too.
+
+**Claude:** Left `[RETRY_DELAY]` as an Open Issue. See `03b-notify-customer-of-technician-eta.md`.
 
 ## use-case-test-cases / use-case-requirements
 
