@@ -249,6 +249,11 @@ function parseDialogue(text) {
       // blank line ends nothing by itself; paragraphs within a turn are separated by these
     } else if (current) {
       current.text += (current.text ? "\n" : "") + line;
+    } else {
+      // Narration under a heading with no leading "**Claude:**"/"**User:**" marker
+      // (e.g. self-check notes, per-step summaries). Without this, that text is
+      // silently dropped and playback appears to skip straight past that section.
+      current = { type: "claude", label: "Claude", text: line };
     }
   });
   if (current) turns.push(current);
