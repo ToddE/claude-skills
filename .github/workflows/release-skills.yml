@@ -19,12 +19,15 @@ jobs:
       - name: Build .skill zip for each skill directory
         run: |
           mkdir -p dist
-          for dir in */; do
-            name="${dir%/}"
-            if [ -f "$name/SKILL.md" ]; then
-              echo "Packaging $name"
-              zip -r "dist/${name}.skill" "$name" -x '*.DS_Store'
-            fi
+          # Top-level skills (e.g. clean-style) and skills nested inside a plugin's
+          # skills/ directory (e.g. product-management/skills/<name>) both package as
+          # their own standalone .skill file, so a single-skill install still works
+          # regardless of which plugin, if any, a skill also ships inside.
+          find . -mindepth 1 -maxdepth 4 -name SKILL.md | while read -r skill_md; do
+            skill_dir="$(dirname "$skill_md")"
+            name="$(basename "$skill_dir")"
+            echo "Packaging $name (from $skill_dir)"
+            (cd "$skill_dir" && zip -r "$GITHUB_WORKSPACE/dist/${name}.skill" . -x '*.DS_Store')
           done
           ls -la dist
 

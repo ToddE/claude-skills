@@ -1,0 +1,10 @@
+{
+  "name": "product-management",
+  "displayName": "Product Management Pipeline",
+  "description": "Working Backwards PR/FAQ through use-case discovery, UML use cases, test cases, trackable requirements, and persona-driven architecture review. Six skills that hand off to each other across one initiative's lifecycle.",
+  "version": "1.0.0",
+  "author": {
+    "name": "A. Todd Emerson",
+    "url": "https://github.com/ToddE/claude-skills"
+  }
+}
