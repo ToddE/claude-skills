@@ -23,9 +23,9 @@ Read `references/format.md` for the full format spec and worked examples before 
 
 ### Step 1: Gather the flow
 
-If the user arrives with a confirmed candidate from the use-case-discovery skill (a Name, Summary, and Rough Actors already agreed on), don't re-run this interview from scratch. Use those as the starting Title, one-sentence description, and Actors, and focus the conversation on the Basic Path, Alternate/Exception Paths, and Post-Condition(s) instead.
+If the user arrives with a confirmed candidate from the use-case-discovery skill (a Name, Summary, and Rough Actors already agreed on) and, ideally, a confirmed PR/FAQ or similar brief behind it, don't re-run this interview from scratch, and don't silently invent the Basic Path, Alternate/Exception Paths, or Post-Condition(s) either. Draft them directly from that context, then present the full draft and ask the user to confirm or correct it before treating it as final. That upstream context describes what the initiative is and why; it doesn't contain the flow's actual step-by-step mechanics, so a drafted flow still needs a real confirmation pass, not just a recap sentence.
 
-Otherwise, don't generate the use case from a one-line prompt if the flow isn't clear yet. Ask enough to nail down:
+If there's no confirmed candidate, or the candidate has no PR/FAQ or brief behind it, don't draft blind and don't generate the use case from a one-line prompt either. Run the interview instead, asking enough to nail down:
 - **Title and one-sentence purpose**: what is the actor doing, and why.
 - **Assumptions**: what must already be true before step 1 (prior setup, prior use cases, provisioning, permissions).
 - **Actors**: every system, app, person, or service that takes an action in the flow.

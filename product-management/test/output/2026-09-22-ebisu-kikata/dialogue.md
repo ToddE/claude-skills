@@ -131,42 +131,30 @@ three candidate use cases from the confirmed PR/FAQ brief (see `02-use-case-cand
 
 ## use-case-uml
 
-Followed `use-case-uml/SKILL.md` Steps 1-2 for all three use cases. `03a-chef-input-
-commissioning.md` reuses the `use-case-uml/references/format.md` worked example's actual
-content (Assumptions, Basic Path, both Exception Paths, Post-Condition) almost verbatim per
-this task's instruction, renaming the worked example's generic "System" actor to "Kaiten IQ"
-for actor-name consistency with the two new use cases, and lightly rewording a few Basic
-Path actions ("Kitchen staff member preparing..." instead of "Kitchen staff member
-preparing...") without changing the flow's substance: still RFID plate commissioning, still
-Live Inventory, still the "born on" timestamp. `03b` and `03c` are newly drafted for this
-run.
+**Claude:** For "Chef Input (Commissioning)," reusing `use-case-uml/references/format.md`'s own worked example almost verbatim per this task's instruction, renaming its generic "System" actor to "Kaiten IQ" for consistency with the other two use cases. Before treating that as final: does a real commissioning flow at an Ebisu location actually work this way, chef places tagged plates in a workspace, touches the menu item on a touch screen, confirms the scan, or does the worked example's flow not quite match how your chefs would do it?
 
-**Step 3 self-check, run for real against all three use cases:**
-- Actors and Basic Path stay in sync in all three: every listed Actor (Chef, Kaiten IQ,
-  Floor Staff, Guest, Cashier) appears at least once in its use case's Basic Path, not only
-  in an Alternate/Exception Path. No repeat of the `continental-circuits` run's "Sourcing
-  Manager only in Exception Paths" bug turned up here; each use case was drafted with this
-  check in mind from the start rather than caught after the fact.
-- All three Basic Paths end with the literal `| | | END OF USE CASE |` row.
-- Every Alternate/Exception Path references a step number that exists in its use case's
-  Basic Path, and each ends with "Use case continues at Basic Path #N" or, for a terminal
-  path, "End of use case," matching the two patterns the format reference itself uses across
-  its two worked examples.
-- No two consecutive Basic Path rows are the same actor performing the same, non-branchable
-  action. `03b`'s and `03c`'s runs of 3-4 consecutive same-actor rows (Kaiten IQ reading,
-  calculating, detecting, flagging in `03b`; Kaiten IQ reading, tallying, displaying in
-  `03c`) were checked against this rule specifically, since it's the easiest one to violate
-  by accident when one actor does most of the work: each action is distinct and
-  independently branchable (a read-gap Exception Path branches off the "read" action in
-  `03b`, for instance), so none needed merging.
-- Actor names (Chef, Kaiten IQ, Floor Staff, Guest, Cashier) are identical across all three
-  documents. "Floor Staff" and "Cashier" were deliberately kept as separate actors even
-  though one person fills both roles at a small licensee location, since the format
-  reference's own convention is to name distinct responsibilities, not distinct job titles.
-- No genuine bug found in this run's use-case drafting itself, unlike `continental-circuits`,
-  which found and fixed a real actor-consistency violation. Worth stating plainly rather than
-  manufacturing a finding: this self-check step worked exactly as `use-case-uml/SKILL.md`
-  describes it, and this run's content passed it on the first pass.
+**User (simulated, as founder Aiko Tanaka):** That's genuinely how it works, plate-then-touch-then-confirm is close to what we prototyped. Keep it as-is.
+
+**Claude:** Kept it as reused, with only the actor rename and the Post-Condition's "born on" timestamp language tied forward to what 03b and 03c both depend on. See `03a-chef-input-commissioning.md`.
+
+**Claude:** "Automatic Freshness Pull" and "Checkout Plate Tally" have no worked example to reuse, so these are drafted directly from the confirmed PR/FAQ and candidates rather than an open interview, per `use-case-uml/SKILL.md` Step 1. Drafted "Automatic Freshness Pull": belt antennas continuously read plate tags, Kaiten IQ calculates elapsed time since each plate's "born on" timestamp, flags one that's crossed its menu-item category's freshness threshold, and Floor Staff retrieves and confirms removal. Branches for a proactive quality-defect removal, a flagged plate a guest takes before Floor Staff arrives, and a damaged/undetected tag. Does per-menu-item-category freshness thresholds (nigiri vs. a mayonnaise-based roll) match how spoilage risk actually varies on your belt?
+
+**User (simulated, as founder Aiko Tanaka):** Yes, category-level thresholds are right, individual-plate thresholds would be overkill. One real question this raises: can a licensee location set tighter thresholds than ours for the same category, say for a hotter kitchen?
+
+**Claude:** That's not resolved by anything in the PR/FAQ, flagging it as an Open Issue rather than deciding it here. See `03b-automatic-freshness-pull.md`.
+
+**Claude:** Drafted "Checkout Plate Tally," building on 03a and 03b: guest signals readiness to pay, Cashier has them stack plates on a checkout RFID reader, Kaiten IQ reads every tag, tallies by price tier, and closes each plate's record as sold once payment's confirmed. Branches for a guest disputing the tally, an unreadable plate in the stack, and a guest presenting a plate 03b already flagged for removal. For that last one, I drafted the Cashier as deciding sell-at-full-price, discount, or decline, house policy isn't specified in the PR/FAQ. Does that three-way choice match reality, or is there always a single house rule?
+
+**User (simulated, as founder Aiko Tanaka):** There's no single rule yet, it really does depend on the manager on duty and how obviously off the plate looks. Leave it as a Cashier judgment call with the three options.
+
+**Claude:** Left `[DISCOUNT_POLICY]` as an Open Issue rather than picking one of the three as a default. See `03c-checkout-plate-tally.md`.
+
+**Claude:** Step 3 self-check, run for real against all three use cases:
+- Actors and Basic Path stay in sync in all three: every listed Actor (Chef, Kaiten IQ, Floor Staff, Guest, Cashier) appears at least once in its use case's Basic Path, not only in an Alternate/Exception Path. No repeat of the `continental-circuits` run's "Sourcing Manager only in Exception Paths" bug turned up here.
+- All three Basic Paths end with the literal `| | | END OF USE CASE |` row, and every Alternate/Exception Path references a real step number and ends with either a rejoin or "End of use case."
+- No two consecutive Basic Path rows are the same actor performing the same, non-branchable action; `03b`'s and `03c`'s runs of 3-4 consecutive same-actor rows were checked against this specifically, and each action is distinct and independently branchable.
+- Actor names (Chef, Kaiten IQ, Floor Staff, Guest, Cashier) are identical across all three documents. "Floor Staff" and "Cashier" were deliberately kept separate even though one person fills both roles at a small licensee location, naming distinct responsibilities, not job titles.
+- No genuine bug found in this run's drafting itself, unlike `continental-circuits`. Worth stating plainly rather than manufacturing a finding: this self-check worked exactly as `use-case-uml/SKILL.md` describes it, and this run's content passed it on the first pass.
 
 ## use-case-test-cases / use-case-requirements
 

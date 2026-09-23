@@ -34,7 +34,25 @@ added this session specifically to handle non-commercial announcements.
 
 ## use-case-uml
 
-**Claude:** Initially drafted only "Claim a Surplus Listing," chosen because it's the use case with the most interesting Alternate/Exception path since surplus items can be claimed, expire, or get contested by two claimants. That single-use-case scope was flagged as unrealistic (see the run README's findings): real projects have multiple use cases, and this one already referenced a second use case ("Route Unclaimed Surplus to Food Bank") that didn't exist yet, a dangling cross-link. Went back and drafted the two use cases that "Claim a Surplus Listing" actually depends on, "List Surplus Produce" (its precondition) and "Route Unclaimed Surplus to Food Bank" (what happens when a listing expires unclaimed, which it references directly). All three now live as separate files, `03a-list-surplus-produce.md`, `03b-claim-surplus-listing.md`, `03c-route-unclaimed-surplus-to-food-bank.md`, cross-linked by file path and using the same actor names throughout, which is what actually exercises use-case-uml's actor-consistency rule across a set of use cases instead of trivially satisfying it with one use case in isolation.
+**Claude:** Initially drafted only "Claim a Surplus Listing," chosen because it's the use case with the most interesting Alternate/Exception path since surplus items can be claimed, expire, or get contested by two claimants. That single-use-case scope was flagged as unrealistic (see the run README's findings): real projects have multiple use cases, and this one already referenced a second use case ("Route Unclaimed Surplus to Food Bank") that didn't exist yet, a dangling cross-link. Went back and drafted the two use cases that "Claim a Surplus Listing" actually depends on, "List Surplus Produce" (its precondition) and "Route Unclaimed Surplus to Food Bank" (what happens when a listing expires unclaimed, which it references directly). Per `use-case-uml/SKILL.md` Step 1, having a confirmed candidate and PR/FAQ behind each one means drafting the flow directly instead of interviewing from scratch, but the draft still gets presented for confirmation rather than treated as final on its own.
+
+**Claude:** Drafted "List Surplus Produce" from the confirmed candidate and PR/FAQ: a member opens the surplus board, enters what they're offering, the app validates and publishes it, starts its claim window, and notifies other members. One Exception Path for a listing missing a description or quantity. Does this match how a listing actually gets created, and is there anything before or after this flow I'm missing?
+
+**User (simulated):** Matches it. One addition: members without a smartphone use the paper-sheet fallback mentioned in the PR/FAQ, but that's the parks coordinator transcribing it later, not a real-time actor in this flow, so it doesn't need its own path here.
+
+**Claude:** Agreed, that's a separate offline process, not a branch of this use case. Keeping it out. See `03a-list-surplus-produce.md`.
+
+**Claude:** Drafted "Claim a Surplus Listing," building on 03a: a member finds an open listing and claims it, the app checks the claim window and marks it claimed, notifies the original lister, and removes it from the board. Two branches: two members racing to claim the same listing, and a claim attempt after the window's already expired. Does the "who wins the race" behavior match what you'd want, and is the claim window itself a fixed duration or configurable per garden?
+
+**User (simulated):** Whoever the app processes first wins, that's fine, no need for a tiebreaker rule beyond that. Claim window length isn't decided yet, that's a real open question, don't invent a number for it.
+
+**Claude:** Left it as an explicit `[CLAIM_WINDOW]` placeholder and Open Issue rather than guessing a value. See `03b-claim-surplus-listing.md`.
+
+**Claude:** Drafted "Route Unclaimed Surplus to Food Bank," triggered when 03b's claim window expires unclaimed: the app marks it unclaimed, sends it to the garden's food bank contact, and marks it routed once received, with an Exception Path for the notification failing to reach the contact. How many retry attempts before that failure needs a human to step in?
+
+**User (simulated):** Also not decided yet. Leave it open the same way as the claim window.
+
+**Claude:** Left `[RETRY_COUNT]` as an Open Issue rather than guessing. All three use cases now live as separate files, `03a-list-surplus-produce.md`, `03b-claim-surplus-listing.md`, `03c-route-unclaimed-surplus-to-food-bank.md`, cross-linked by file path and using the same actor names throughout, which is what actually exercises use-case-uml's actor-consistency rule across a set of use cases instead of trivially satisfying it with one use case in isolation.
 
 ## use-case-test-cases / use-case-requirements / architect-review
 
