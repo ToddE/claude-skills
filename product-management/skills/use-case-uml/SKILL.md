@@ -9,7 +9,7 @@ description: >
   alternate or exception path to an existing use case. This skill enforces one exact format
   so multiple use cases in the same document stay consistent.
 ---
-*Author: Todd Emerson · https://github.com/ToddE/claude-skills · CC BY 4.0*
+*Author: Todd Emerson · https://github.com/ToddE/claude-skills · MIT*
 
 *Suggested model: Sonnet 5, medium reasoning effort (low is often enough once the flow is already clear).*
 

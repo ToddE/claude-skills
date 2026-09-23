@@ -9,7 +9,7 @@ description: >
   "scope out the use cases before we write them." This is a scoping pass, not a full use
   case. It hands off confirmed candidates to the use-case-uml skill to be fully drafted.
 ---
-*Author: Todd Emerson · https://github.com/ToddE/claude-skills · CC BY 4.0*
+*Author: Todd Emerson · https://github.com/ToddE/claude-skills · MIT*
 
 *Suggested model: Sonnet 5, medium reasoning effort.*
 

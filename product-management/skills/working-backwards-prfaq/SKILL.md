@@ -12,7 +12,7 @@ description: >
   generating a structured PR/FAQ with press release, stakeholder quotes, external FAQ, and
   internal FAQ.
 ---
-*Author: Todd Emerson · https://github.com/ToddE/claude-skills · CC BY 4.0*
+*Author: Todd Emerson · https://github.com/ToddE/claude-skills · MIT*
 
 *Suggested model: Sonnet 5, medium-high reasoning effort (the Internal FAQ's judgment calls on scale, risk, and resourcing benefit from the extra effort).*
 

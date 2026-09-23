@@ -9,7 +9,7 @@ description: >
   completed use case with Post-Condition(s) already written as checkable states. If the
   use case doesn't have that yet, hand off to use-case-uml first to add it.
 ---
-*Author: Todd Emerson · https://github.com/ToddE/claude-skills · CC BY 4.0*
+*Author: Todd Emerson · https://github.com/ToddE/claude-skills · MIT*
 
 *Suggested model: Sonnet 5, low-medium reasoning effort (mostly mechanical extraction).*
 

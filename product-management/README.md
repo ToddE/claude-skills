@@ -234,4 +234,4 @@ produced.
 
 ## License
 
-CC BY 4.0, same as the rest of this repo. See [../LICENSE](../LICENSE).
+MIT. See [LICENSE](LICENSE). (The rest of this repo, outside this plugin, remains CC BY 4.0; see [../LICENSE](../LICENSE).)

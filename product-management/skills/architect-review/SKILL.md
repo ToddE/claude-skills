@@ -12,7 +12,7 @@ description: >
   also run an opt-in debate between two personas, grounded in a short product-manager
   intake, ending in a "take this approach if..." decision rule for each.
 ---
-*Author: Todd Emerson · https://github.com/ToddE/claude-skills · CC BY 4.0*
+*Author: Todd Emerson · https://github.com/ToddE/claude-skills · MIT*
 
 *Suggested model: Sonnet 5, high reasoning effort (the most synthesis-heavy skill here).*
 
