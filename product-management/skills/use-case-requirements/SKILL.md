@@ -12,7 +12,7 @@ description: >
   PR/FAQ yet, and just wants to talk through it and get a requirements list out the other
   end.
 ---
-*Author: Todd Emerson · https://github.com/ToddE/claude-skills · CC BY 4.0*
+*Author: Todd Emerson · https://github.com/ToddE/claude-skills · MIT*
 
 *Suggested model: Sonnet 5, medium reasoning effort (Mode A is mostly extraction; Mode B's interview benefits from more).*
 
