@@ -188,6 +188,20 @@ var EXAMPLES = [
     ]
   },
   {
+    slug: "2026-09-23-standalone-mode",
+    name: "Standalone Mode Verification",
+    blurb: "Five unrelated, cold invocations, one per downstream skill (use-case-discovery, use-case-uml, use-case-test-cases, use-case-requirements, architect-review), each with no PR/FAQ and no shared context feeding it. Unlike every other run here, which chains from working-backwards-prfaq and so skips each skill's own intake, this one shows each skill's real standalone interview in full.",
+    hasDialogue: true,
+    artifacts: [
+      { label: "use-case-discovery output", path: "use-case-discovery-output.md" },
+      { label: "use-case-uml output", path: "use-case-uml-output.md" },
+      { label: "use-case-test-cases output", path: "use-case-test-cases-output.md" },
+      { label: "use-case-requirements output", path: "use-case-requirements-output.md" },
+      { label: "architect-review output", path: "architect-review-output.md" },
+      { label: "This run's findings", path: "README.md" }
+    ]
+  },
+  {
     slug: "2026-09-22-claude-skills-meta",
     name: "Claude Skills (meta)",
     blurb: "Claude Skills announcing itself. The first run, predates the full dialogue-transcript convention, so it jumps straight to results.",
