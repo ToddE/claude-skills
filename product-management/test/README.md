@@ -48,11 +48,6 @@ generated for that run alone, so the pipeline gets exercised on something it was
 designed around. When that's the case, say so in the run's `README.md` and in `dialogue.md`
 so it's clear the idea wasn't seeded by whoever kicked off the test.
 
-## Known gap
-
-`2026-09-22-claude-skills-meta`, the first run, predates this convention and has no
-`dialogue.md`; it went straight to a compact summary of each intake instead of a full
-transcript. Later runs should include the dialogue.
 
 ## Generating a new run
 
