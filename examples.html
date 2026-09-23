@@ -49,14 +49,6 @@
     padding-top: 0.6rem;
   }
   .divider:first-child { border-top: none; margin-top: 0; padding-top: 0; }
-  .narration {
-    color: #666;
-    font-size: 0.85rem;
-    font-style: italic;
-    line-height: 1.5;
-    margin-bottom: 0.75rem;
-    white-space: pre-wrap;
-  }
   .bubble {
     max-width: 85%;
     padding: 0.55rem 0.85rem;
@@ -93,7 +85,6 @@
     select, button.ctl { background: #1e1e1e; border-color: #444; color: #e6e6e6; }
     button.ctl.active { background: #d97757; color: #fff; border-color: #d97757; }
     .note { color: #999; }
-    .narration { color: #999; }
     .divider { color: #888; border-color: #333; }
     .bubble.claude { background: #1e2530; color: #e6e6e6; }
     .bubble.user { background: #2a2418; color: #e6e6e6; }
@@ -258,13 +249,6 @@ function parseDialogue(text) {
       // blank line ends nothing by itself; paragraphs within a turn are separated by these
     } else if (current) {
       current.text += (current.text ? "\n" : "") + line;
-    } else {
-      // Text under a heading with no leading "**Claude:**"/"**User:**" marker. This is
-      // the dialogue.md author's own third-person narration about the run (e.g. "Followed
-      // use-case-uml/SKILL.md Steps 1-2..."), not something Claude said in the session, so
-      // it must not be rendered as a Claude chat bubble. Render it as narration instead of
-      // silently dropping it, which made playback look like it skipped the section.
-      current = { type: "narration", text: line };
     }
   });
   if (current) turns.push(current);
@@ -313,9 +297,6 @@ function renderTurn(turn) {
   var el = document.createElement("div");
   if (turn.type === "section") {
     el.className = "divider";
-    el.textContent = turn.text;
-  } else if (turn.type === "narration") {
-    el.className = "narration";
     el.textContent = turn.text;
   } else {
     el.className = "bubble " + turn.type;
