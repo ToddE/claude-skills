@@ -42,17 +42,21 @@ added this session specifically to handle non-commercial announcements.
 
 **Claude:** Agreed, that's a separate offline process, not a branch of this use case. Keeping it out. See `03a-list-surplus-produce.md`.
 
-**Claude:** Drafted "Claim a Surplus Listing," building on 03a: a member finds an open listing and claims it, the app checks the claim window and marks it claimed, notifies the original lister, and removes it from the board. Two branches: two members racing to claim the same listing, and a claim attempt after the window's already expired. Does the "who wins the race" behavior match what you'd want, and is the claim window itself a fixed duration or configurable per garden?
+**Claude:** Drafted "Claim a Surplus Listing," building on 03a: a member finds an open listing and claims it, the app checks the claim window and marks it claimed, notifies the original lister, and removes it from the board. Two members racing for the same listing is a real scenario, so there's a branch for it: whoever the app processes first gets it, the other sees "just claimed by someone else" and lands back on the board. Is "first processed wins" fair enough, or does this need something fairer, like a short random delay so it's not just whoever has better signal?
 
-**User (simulated):** Whoever the app processes first wins, that's fine, no need for a tiebreaker rule beyond that. Claim window length isn't decided yet, that's a real open question, don't invent a number for it.
+**User (simulated):** First processed wins is fine, nobody's going to notice a few hundred milliseconds of difference. Don't overbuild this.
 
-**Claude:** Left it as an explicit `[CLAIM_WINDOW]` placeholder and Open Issue rather than guessing a value. See `03b-claim-surplus-listing.md`.
+**Claude:** Agreed, keeping it simple then. One real gap this surfaced: how long a listing actually stays open before the window closes isn't decided anywhere in the PR/FAQ.
 
-**Claude:** Drafted "Route Unclaimed Surplus to Food Bank," triggered when 03b's claim window expires unclaimed: the app marks it unclaimed, sends it to the garden's food bank contact, and marks it routed once received, with an Exception Path for the notification failing to reach the contact. How many retry attempts before that failure needs a human to step in?
+**User (simulated):** Correct, that's genuinely undecided. Leave it a placeholder rather than picking a number.
 
-**User (simulated):** Also not decided yet. Leave it open the same way as the claim window.
+**Claude:** Left `[CLAIM_WINDOW]` as an Open Issue. See `03b-claim-surplus-listing.md`.
 
-**Claude:** Left `[RETRY_COUNT]` as an Open Issue rather than guessing. All three use cases now live as separate files, `03a-list-surplus-produce.md`, `03b-claim-surplus-listing.md`, `03c-route-unclaimed-surplus-to-food-bank.md`, cross-linked by file path and using the same actor names throughout, which is what actually exercises use-case-uml's actor-consistency rule across a set of use cases instead of trivially satisfying it with one use case in isolation.
+**Claude:** Drafted "Route Unclaimed Surplus to Food Bank," triggered when 03b's claim window expires unclaimed: the app marks it unclaimed, sends the listing to the garden's food bank contact, and marks it routed once received. If the notification fails to reach the contact, it retries once and logs the failure for manual follow-up. Given produce is time-sensitive, does one retry-and-log feel like enough, or should a repeated failure escalate straight to the garden coordinator instead of waiting for someone to notice the log?
+
+**User (simulated):** One retry plus a log is fine for a first release. If a food bank contact goes genuinely unreachable for days, that's a relationship problem the coordinator needs to notice on their own, not something the app should paper over by auto-escalating.
+
+**Claude:** Makes sense, keeping it as a log rather than an active escalation. All three use cases now live as separate files, `03a-list-surplus-produce.md`, `03b-claim-surplus-listing.md`, `03c-route-unclaimed-surplus-to-food-bank.md`, cross-linked by file path and using the same actor names throughout, which is what actually exercises use-case-uml's actor-consistency rule across a set of use cases instead of trivially satisfying it with one use case in isolation.
 
 ## use-case-test-cases / use-case-requirements / architect-review
 
