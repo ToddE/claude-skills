@@ -6,30 +6,9 @@ non-commercial meta announcement, a city-department program, a for-profit home-s
 and an education-sector cold run), none of which touched capital expenditure, physical
 supply chains, export-control/sourcing compliance, or manufacturing-line capacity.
 
-## Before intake: a namespace collision, confirmed again
-
-Before running `working-backwards-prfaq`'s intake, this run tried the real `Skill` tool,
-the same as every prior non-cold run. `Skill(skill: "working-backwards-prfaq")` launched
-successfully but loaded an unrelated, generic skill from a different plugin
-(`anthropic-skills`), not this repo's `product-management/skills/working-backwards-prfaq`.
-Confirmed by diffing the loaded instructions against
-`../../skills/working-backwards-prfaq/SKILL.md` directly: the loaded version has no
-audience-generalization language (it's commercial-product-only), no clean-style deferral,
-and no use-case-discovery handoff offer, all of which this repo's actual file has.
-`Skill(skill: "product-management:working-backwards-prfaq")` returned `Unknown skill`. Both
-outcomes are exactly what `2026-09-22-classpods-cold-run/README.md` already documented: the
-`product-management` plugin isn't installed in this session either, and the collision with
-`anthropic-skills`'s same-named skill means the bare name silently answers with the wrong
-implementation instead of erroring.
-
-This isn't a new finding, it confirms a previously-documented one still holds, and this run
-did not treat it as newly discovered. Given the plugin isn't installed, this run followed
-the same approach the non-cold runs (`dispatchiq`, `plotshare`, the meta run) appear to have
-used: read each skill's current `SKILL.md` and `references/*.md` directly from this repo in
-full, and executed that documented procedure by hand, stage by stage, self-answering as the
-founder, rather than fabricating output that merely looks like what the skill would produce.
-`clean-style` genuinely is installed in this session (confirmed separately, see below), and
-was invoked through the real `Skill` tool for its self-check step.
+*(This run hit the same skill-namespace collision documented in prior runs' READMEs before
+intake; see `README.md` for that finding rather than repeating it here. `dialogue.md` covers
+only the actual pipeline replay.)*
 
 ## working-backwards-prfaq intake
 
@@ -58,33 +37,7 @@ five-stage interview directly, one question at a time.
 
 **Claude:** Recap confirmed before generating (see `01-prfaq.md`). This is a physical-manufacturing, capital-intensive initiative, so the Internal FAQ leans on chip supplier qualification timelines, factory capex, and allocation-constrained supply risk instead of the cloud-hosting or SaaS-vendor risk language a software PR/FAQ would use.
 
-### Self-check: clean-style (real skill, genuinely installed)
-
-`clean-style` is actually present in this session's available skills (unlike the six
-`product-management` skills), so it was invoked for real through the `Skill` tool against
-the drafted `01-prfaq.md`, per `working-backwards-prfaq`'s own instruction to defer to it
-for prose quality. Findings and fixes:
-
-- **Sentence opened with a broad quantifier** ("Every chip in the hub...") in the press
-  release's second paragraph. Rule: no sentence should open with "Every/All/Each" as a
-  formulaic setup. Reworded to "The hub's chips... come from a fab in the United States or
-  the European Union."
-- **Same violation, second occurrence**, in the Internal FAQ's supplier-qualification
-  answer ("Every chip in the bill of materials must come from a supplier..."). Reworded to
-  lead with the specific subject instead: "A part number reaches the bill of materials
-  only after..."
-- **Undefined jargon on first use**: "NDAA Section 889" appeared in the Internal FAQ's TAM
-  answer with no inline gloss. Added a parenthetical definition on first use.
-- **Two passive constructions** in the External FAQ pricing and warranty answers
-  ("Final pricing is set before general availability," "[WARRANTY_DETAIL] to be finalized
-  before general availability"). Rewrote both in active voice with Continental Circuits as
-  the subject. Note: this is the same passive-placeholder phrasing pattern the published
-  `dispatchiq` run's own FAQ uses verbatim ("[PRICING_DETAIL] to be finalized before general
-  availability"); not flagged as a new skill bug since it's a minor, pre-existing pattern in
-  a different run's already-published output, but worth a light pass there too if that run
-  gets revisited.
-
-No other violations found; the rest of the draft passed on the first read.
+**Claude:** Ran `clean-style` against the drafted PR/FAQ before presenting it. Fixed three issues: two sentences that opened with a broad quantifier ("Every chip in the hub...") in the press release and Internal FAQ, reworded to lead with the specific subject instead; "NDAA Section 889" appeared with no inline gloss on first use, added one; and two passive constructions in the External FAQ pricing/warranty answers, rewritten active-voice with Continental Circuits as the subject. No other violations found.
 
 ## use-case-discovery
 
