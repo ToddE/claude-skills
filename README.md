@@ -6,23 +6,23 @@ A collection of skills for [Claude AI](https://claude.ai). Each one adds a speci
 
 **[Get started in claude.ai &rarr;](https://claude.ai/new?q=I%20have%20a%20product%20idea%20and%20want%20to%20work%20through%20the%20full%20planning%20flow%20from%20the%20Claude%20Skills%20repo%20%28https%3A//github.com/ToddE/claude-skills%29%20in%20this%20chat%2C%20fetching%20each%20skill%27s%20SKILL.md%20from%20raw.githubusercontent.com%20as%20we%20reach%20that%20stage.%20All%20six%20pipeline%20skills%20live%20under%20product-management/skills/%3Cname%3E/SKILL.md%20in%20that%20repo.%20Start%20by%20fetching%20https%3A//raw.githubusercontent.com/ToddE/claude-skills/main/product-management/skills/working-backwards-prfaq/SKILL.md%20and%20follow%20it%20to%20help%20me%20write%20a%20Working%20Backwards%20PR/FAQ.%20Once%20that%27s%20done%2C%20offer%20to%20continue%20into%20use%20case%20discovery%20%28product-management/skills/use-case-discovery/SKILL.md%29%2C%20writing%20each%20use%20case%20%28product-management/skills/use-case-uml/SKILL.md%29%2C%20test%20cases%20%28product-management/skills/use-case-test-cases/SKILL.md%29%2C%20and%20functional%20requirements%20%28product-management/skills/use-case-requirements/SKILL.md%29%2C%20fetching%20each%20one%20from%20that%20repo%20when%20we%20get%20there.%20Start%20with%20your%20first%20question%20for%20the%20PR/FAQ.)** opens a new claude.ai chat pre-loaded with the whole planning flow. It requires a plan with web fetching enabled; see Option 0 below if it doesn't work.
 
-*This README follows the Clean Style skill below.*
 
 ## Skills at a Glance
 
 | Skill / Plugin | What it does | Suggested model |
 | --- | --- | --- |
 | [Clean Style](#clean-style) | Applies a strict anti-AI-slop checklist to external-facing prose. The baseline every other skill's output defers to. | Sonnet 5, medium |
-| [Product Management Pipeline](product-management/README.md) (plugin, 6 skills) | Working Backwards PR/FAQ &rarr; Use Case Discovery &rarr; Use Case UML &rarr; {Test Cases, Requirements} &rarr; Architect Review. Full detail, triggers, and example prompts for each: [product-management/README.md](product-management/README.md). | Varies per skill; see that file |
+| [Product Management Pipeline](product-management/README.md) (plugin, 6 skills) | This set of skills is meant to give your ideas a kickstart towards becoming a product. <br/>Working Backwards PR/FAQ &rarr; Use Case Discovery &rarr; Use Case UML &rarr; {Test Cases, Requirements} &rarr; Architect Review. <br/>See full detail, triggers, and example prompts for each: [product-management/README.md](product-management/README.md). | Varies per skill; see that file |
 
 ## How to Use These Skills
 
 This repo holds two kinds of things: Clean Style, a general-purpose writing skill, and a
 product-management pipeline (Working Backwards PR/FAQ through Architect Review) bundled
-together as one plugin, since those six skills hand off to each other across an
-initiative's lifecycle rather than working alone. Each of the six is also packaged
-individually as a `.skill` file and attached to [GitHub Releases](https://github.com/ToddE/claude-skills/releases)
-if you only want one. If you want to try one before committing to it, start with Option 0.
+together as one plugin, since those six skills can hand off to each other across an
+initiative's lifecycle rather than working alone. Each of these six  skills is also packaged
+individually as a `.skill` file and attached to [GitHub Releases](https://github.com/ToddE/claude-skills/releases). 
+
+If you want to try one before committing to it, start with Option 0.
 For persistent use, pick from Options 1-4.
 
 ### Option 0: Try it for one session, no install
@@ -99,8 +99,4 @@ Full detail for each skill, triggers, example prompts, and the pipeline diagram:
 
 ## License
 
-This work is licensed under [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/).
-
-You are free to use, adapt, and redistribute these skills, including for commercial purposes, provided you give appropriate credit:
-
-> Skills by Todd Emerson: [github.com/ToddE/claude-skills](https://github.com/ToddE/claude-skills)
+MIT. See [LICENSE](LICENSE).

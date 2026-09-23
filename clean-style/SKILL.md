@@ -11,7 +11,7 @@ description: >
   internal technical notes, code comments, or this-conversation-only answers; those don't
   need the external-facing treatment.
 ---
-*Author: Todd Emerson · https://github.com/ToddE/claude-skills · CC BY 4.0*
+*Author: Todd Emerson · https://github.com/ToddE/claude-skills · MIT*
 
 *Suggested model: Sonnet 5, medium reasoning effort.*
 
