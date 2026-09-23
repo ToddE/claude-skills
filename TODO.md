@@ -177,12 +177,33 @@ forcing an artificial rejoin. Also confirmed the granularity self-check catching
 "and"-joined-effects split in `05b`, and a first-of-its-kind case for explicitly declining a
 requirement (payment processing, out of scope per the use case candidates' own scope note).
 
+**Done, this session (standalone-mode verification)**:
+`product-management/test/output/2026-09-23-standalone-mode/` closes a gap the classpods
+cold run's finding left open: every one of the six pipeline example runs chains
+`working-backwards-prfaq` into all five downstream skills, so each downstream skill's
+"don't re-ask if already given" rule always fires and its own real interview never runs in
+any existing transcript, even though every one of those five `SKILL.md` files documents
+standalone, cold-invocation behavior. This run invoked each of the five downstream skills
+in isolation, with five unrelated one-off scenarios and zero shared context between them,
+and confirmed by hand (the real `Skill` tool returned `Unknown skill` for all five in that
+session, a more complete gap than the `working-backwards-prfaq` collision, so each skill's
+current file was read and executed manually per the same workaround prior runs used): all
+five worked exactly as documented, including use-case-discovery's own handoff-offer and
+unavailable-skill disclosure, and architect-review's Step 1 one-line-idea handling and
+opt-in-only debate. One genuine, minor spec bug found and fixed: `use-case-uml/SKILL.md`'s
+Step 3 self-check allowed `TBD` as a valid Alternate Path ending, which
+`references/format.md` only ever sanctioned for Exception Paths (Alternate Paths are known
+valid variations, not unresolved failure modes); corrected in place.
+
 **Open**:
-- Because of the finding above, "offer the next step" and the unavailable-skill fallback
-  for the five skills downstream of `working-backwards-prfaq` remain untested — the cold
-  run never got past step one with this repo's actual code running. A follow-up cold run
-  needs to happen with the `product-management` plugin actually installed (or every skill
-  invoked by fully-qualified name) to get past that point.
+- The finding above proves each skill's own standalone entry point works, but not the
+  live, chained handoff sequence between them (discovery &rarr; uml &rarr; test-cases/
+  requirements &rarr; architect-review actually run back-to-back in one session). That,
+  and the unavailable-skill fallback specifically, remain untested end-to-end — the
+  classpods cold run never got past step one with this repo's actual code running, because
+  `working-backwards-prfaq` collided with an unrelated same-named skill before the chain
+  could start. A follow-up run needs the `product-management` plugin actually installed (or
+  every skill invoked by fully-qualified name) to exercise the real chain.
 - Skill discoverability via the harness's synced `.claude/skills/` was inconsistent across
   this session: the available-skills list fluctuated between showing all seven skills and
   showing as few as one or three, with no action taken on this repo's side. Not something

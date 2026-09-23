@@ -64,7 +64,7 @@ Use `[BRACKET_PLACEHOLDER]` for values that vary by partner/integration/environm
 Before showing the draft to the user, verify:
 - Actors and the Basic Path stay in sync: each listed Actor is used at least once in the Basic Path, and each Actor named in the Basic Path is listed in Actors.
 - The Basic Path ends with the literal `| | | END OF USE CASE |` row.
-- Alternate/Exception Paths each reference a step number that exists in the Basic Path and end with "Use case continues at Basic Path #N.", "End of use case." (if the path is a genuine terminal exit rather than a rejoin), or `TBD` if not yet resolved.
+- Alternate/Exception Paths each reference a step number that exists in the Basic Path and end with "Use case continues at Basic Path #N." or "End of use case." (if the path is a genuine terminal exit rather than a rejoin). Exception Paths may use `TBD` for a failure mode not yet worked out, per `references/format.md`; Alternate Paths, being known valid variations, shouldn't need it.
 - Basic Path rows each have a unique step number, and no two consecutive rows are the same actor doing the same, non-branchable action. Merge or re-word any that collide.
 - Section order matches the spec exactly; no extra sections were invented (e.g. no "Preconditions" instead of "Assumptions," no "Actors/Roles" instead of "Actors").
 - Post-Condition(s) is present even when the answer is "None."
