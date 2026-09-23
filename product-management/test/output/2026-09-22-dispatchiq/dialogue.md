@@ -38,25 +38,21 @@ language, and the new opt-in debate feature in `architect-review`.
 
 **Claude:** Drafting two use cases in full instead of one this time, continuing the fix from the PlotShare run: "Auto-Route a New Job" (the core dispatch logic, with a real branching decision when no technician is available) and "Notify Customer of Technician ETA" (the SMS flow the whole value proposition depends on, with a real failure mode when SMS delivery fails). Per `use-case-uml/SKILL.md` Step 1, since both trace back to a confirmed candidate and PR/FAQ, each gets drafted directly from that context rather than interviewed from scratch, then presented for confirmation.
 
-**Claude:** Drafted "Auto-Route a New Job": dispatcher enters job details, DispatchIQ calculates drive time from every available technician, assigns whoever arrives soonest without exceeding their job load, and both the technician and dispatcher see the result. Branches: a tie on soonest arrival, and nobody able to make the requested window. Does "lighter current job load breaks a tie" match how you'd actually want that decided, and what should happen when nobody can make the window?
+**Claude:** Drafted "Auto-Route a New Job": dispatcher enters job details, DispatchIQ calculates drive time from every available technician, assigns whoever arrives soonest without exceeding their job load, and both the technician and dispatcher see the result. When nobody can make the requested window, it flags the job and asks the dispatcher to manually adjust rather than having the system guess. Does manual intervention feel right there, or should DispatchIQ try something automatic first, like widening the search radius to nearby off-duty technicians?
 
-**User (simulated):** Tiebreaker's right. When nobody can make the window: flag it and let the dispatcher manually adjust, don't have the system guess or auto-push the window out on its own.
+**User (simulated):** Manual is right for now. Auto-widening the radius sounds like it could send someone way outside their normal territory without anyone noticing until the mileage reimbursement shows up. Dispatcher should see it and decide.
 
-**Claude:** That's what's drafted: DispatchIQ flags it and notifies the Dispatcher, who manually adjusts the time window or reassigns another job to make room. One open question this surfaced: what counts as "too loaded" for a technician isn't defined yet, do you have a number, or should it stay a placeholder?
+**Claude:** That's what's drafted then, DispatchIQ flags it and notifies the Dispatcher rather than expanding the search on its own. What counts as a technician being "too loaded" to take another job isn't defined in the PR/FAQ though, is that a flat job count, or should it weigh in job duration too?
 
-**User (simulated):** No number yet, leave it a placeholder, that's genuinely not decided.
+**User (simulated):** Flat count is fine to start, weighting by duration is a good idea for later but adds complexity we don't need for the pilot. The number itself genuinely isn't decided yet, don't hardcode one.
 
-**Claude:** Left `[JOB_LOAD_LIMIT]` as an Open Issue rather than guessing. See `03a-auto-route-a-new-job.md`.
+**Claude:** Left `[JOB_LOAD_LIMIT]` as an Open Issue rather than picking one. See `03a-auto-route-a-new-job.md`.
 
-**Claude:** Drafted "Notify Customer of Technician ETA," building on 03a: once a technician marks a job en route, DispatchIQ calculates the ETA and texts the customer, then logs the send. One Exception Path for SMS delivery failure. Given the PR/FAQ calls silent SMS failure the single biggest risk, I drafted the failure path to retry once, then alert the Dispatcher directly rather than just logging it. Does that match the severity you want, or should a failed send do more than alert the dispatcher?
+**Claude:** Drafted "Notify Customer of Technician ETA," building on 03a: once a technician marks a job en route, DispatchIQ calculates the ETA and texts the customer, then logs the send. Given the PR/FAQ calls silent SMS failure the single biggest risk, the failure path retries once, then alerts the Dispatcher directly instead of just logging it. Does alerting the dispatcher directly match the severity you want, or is a log entry enough since the retry usually succeeds anyway?
 
-**User (simulated):** That's right, alerting the dispatcher directly is exactly the point, a log entry nobody checks isn't enough for something this core.
+**User (simulated):** No, alerting the dispatcher directly is exactly the point, a silent log nobody checks is the whole risk the PR/FAQ is worried about. If anything I'd rather it retry the alert too if the dispatcher doesn't acknowledge it, but that's more than this needs right now.
 
-**Claude:** Kept it as drafted. Retry delay before that one retry attempt isn't specified yet, want a number or should it stay open?
-
-**User (simulated):** Leave it open too.
-
-**Claude:** Left `[RETRY_DELAY]` as an Open Issue. See `03b-notify-customer-of-technician-eta.md`.
+**Claude:** Kept it as drafted, one retry on the text, then a direct alert. See `03b-notify-customer-of-technician-eta.md`.
 
 ## use-case-test-cases / use-case-requirements
 
