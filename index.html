@@ -58,7 +58,7 @@
   <a class="cta" id="get-started" href="#" target="_blank" rel="noopener">Get started in claude.ai &rarr;</a>
   <p style="font-size:0.85rem;color:#888;margin-top:0.75rem;">
     This asks Claude to fetch skill files from GitHub as needed, so it needs a claude.ai plan with web fetching enabled. If it doesn't work, copy
-    <a href="https://raw.githubusercontent.com/ToddE/claude-skills/main/working-backwards-prfaq/SKILL.md" target="_blank">this SKILL.md link</a>
+    <a href="https://raw.githubusercontent.com/ToddE/claude-skills/main/product-management/skills/working-backwards-prfaq/SKILL.md" target="_blank">this SKILL.md link</a>
     into a new chat yourself and ask Claude to follow it.
   </p>
   <p style="font-size:0.85rem;color:#888;margin-top:0.5rem;">
@@ -78,6 +78,8 @@
   <li><strong>Architect Review</strong>: a structured architecture recommendation from a specific Sr. Architect persona.</li>
 </ul>
 
+<p><a href="examples.html">Watch a full example run &rarr;</a> — a real intake played back turn by turn, or skip straight to what it produced.</p>
+
 <p>Full details, install instructions, and downloads: <a href="https://github.com/ToddE/claude-skills">github.com/ToddE/claude-skills</a></p>
 
 <footer>Skills by Todd Emerson &middot; <a href="https://github.com/ToddE/claude-skills/blob/main/LICENSE">CC BY 4.0</a></footer>
@@ -85,10 +87,12 @@
 <script>
   var prompt = "I have a product idea and want to work through the full planning flow from the Claude Skills "
     + "repo (https://github.com/ToddE/claude-skills) in this chat, fetching each skill's SKILL.md from raw.githubusercontent.com "
-    + "as we reach that stage. Start by fetching https://raw.githubusercontent.com/ToddE/claude-skills/main/working-backwards-prfaq/SKILL.md "
+    + "as we reach that stage. All six pipeline skills live under product-management/skills/<name>/SKILL.md in that repo. "
+    + "Start by fetching https://raw.githubusercontent.com/ToddE/claude-skills/main/product-management/skills/working-backwards-prfaq/SKILL.md "
     + "and follow it to help me write a Working Backwards PR/FAQ. Once that's done, offer to continue into use case discovery "
-    + "(use-case-discovery/SKILL.md), writing each use case (use-case-uml/SKILL.md), test cases (use-case-test-cases/SKILL.md), "
-    + "and functional requirements (use-case-requirements/SKILL.md), fetching each one from that repo when we get there. "
+    + "(product-management/skills/use-case-discovery/SKILL.md), writing each use case (product-management/skills/use-case-uml/SKILL.md), "
+    + "test cases (product-management/skills/use-case-test-cases/SKILL.md), and functional requirements "
+    + "(product-management/skills/use-case-requirements/SKILL.md), fetching each one from that repo when we get there. "
     + "Start with your first question for the PR/FAQ.";
   document.getElementById("get-started").href = "https://claude.ai/new?q=" + encodeURIComponent(prompt);
 </script>

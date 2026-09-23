@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claude Skills — Example Runs</title>
+<meta name="description" content="Watch a full pipeline run play back turn by turn, or skip straight to the artifacts it produced.">
+<style>
+  :root { color-scheme: light dark; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    max-width: 720px;
+    margin: 3rem auto;
+    padding: 0 1.25rem;
+    line-height: 1.55;
+    color: #1a1a1a;
+    background: #fff;
+  }
+  @media (prefers-color-scheme: dark) {
+    body { color: #e6e6e6; background: #121212; }
+    a { color: #7db8ff; }
+    select, button.ctl { background: #1e1e1e; border-color: #444; color: #e6e6e6; }
+    .bubble.claude { background: #1e2530; }
+    .bubble.user { background: #2a2418; }
+    .divider { color: #888; border-color: #333; }
+    .transcript { border-color: #333; }
+    .results { border-color: #333; background: #161616; }
+  }
+  h1 { font-size: 1.5rem; margin-bottom: 0.25rem; }
+  p.tagline { color: #666; margin-top: 0; }
+  @media (prefers-color-scheme: dark) { p.tagline { color: #999; } }
+  .controls { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin: 1rem 0; }
+  select, button.ctl {
+    font: inherit;
+    padding: 0.45rem 0.8rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background: #fafafa;
+    cursor: pointer;
+  }
+  button.ctl.active { background: #d97757; color: #fff; border-color: #d97757; }
+  button.ctl:disabled { opacity: 0.5; cursor: default; }
+  .transcript {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    height: 380px;
+    overflow-y: auto;
+    margin-bottom: 1.25rem;
+  }
+  .note { color: #888; font-style: italic; font-size: 0.9rem; margin-bottom: 0.75rem; }
+  .divider {
+    text-align: center;
+    color: #999;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 1rem 0 0.6rem;
+    border-top: 1px dashed #ddd;
+    padding-top: 0.6rem;
+  }
+  .divider:first-child { border-top: none; margin-top: 0; padding-top: 0; }
+  .bubble {
+    max-width: 85%;
+    padding: 0.55rem 0.85rem;
+    border-radius: 10px;
+    margin-bottom: 0.6rem;
+    font-size: 0.92rem;
+    white-space: pre-wrap;
+  }
+  .bubble.claude { background: #eef2f7; margin-right: auto; border-bottom-left-radius: 2px; }
+  .bubble.user { background: #fbeee0; margin-left: auto; border-bottom-right-radius: 2px; text-align: right; }
+  .bubble .who { display: block; font-size: 0.72rem; font-weight: 600; opacity: 0.65; margin-bottom: 0.15rem; }
+  .bubble.user .who { text-align: right; }
+  .results {
+    display: none;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 1.1rem 1.4rem;
+    background: #fafafa;
+  }
+  .results h2 { font-size: 1.05rem; margin-top: 0; }
+  .results ul { padding-left: 1.1rem; margin: 0.5rem 0; }
+  .results li { margin-bottom: 0.3rem; }
+  footer { margin-top: 2.5rem; font-size: 0.85rem; color: #888; }
+</style>
+</head>
+<body>
+
+<h1>See a full pipeline run</h1>
+<p class="tagline">A real intake, self-answered, played back turn by turn. Speed it up or jump straight to what it produced.</p>
+
+<div class="controls">
+  <select id="example-picker" aria-label="Choose an example run"></select>
+</div>
+
+<div class="controls">
+  <button class="ctl" id="play-pause">Play</button>
+  <button class="ctl" id="restart">Restart</button>
+  <button class="ctl speed" data-speed="1">1&times;</button>
+  <button class="ctl speed" data-speed="2">2&times;</button>
+  <button class="ctl speed" data-speed="4">4&times;</button>
+  <button class="ctl" id="skip">Skip to results &rarr;</button>
+</div>
+
+<div class="transcript" id="transcript"></div>
+
+<div class="results" id="results">
+  <h2 id="results-title">Artifacts</h2>
+  <p id="results-blurb"></p>
+  <ul id="results-list"></ul>
+  <p><a id="results-folder" href="#" target="_blank" rel="noopener">View every file this run produced &rarr;</a></p>
+</div>
+
+<footer>
+  Part of <a href="https://github.com/ToddE/claude-skills">Claude Skills</a> by Todd Emerson &middot;
+  <a href="https://github.com/ToddE/claude-skills/blob/main/LICENSE">CC BY 4.0</a> &middot;
+  <a href="index.html">&larr; back</a>
+</footer>
+
+<script>
+var BASE = "https://raw.githubusercontent.com/ToddE/claude-skills/main/";
+var TREE_BASE = "https://github.com/ToddE/claude-skills/tree/main/";
+
+// Each example: slug/folder under product-management/test/output/, a display name,
+// a one-line blurb, whether it has a dialogue.md to play back, and a short list of
+// its most worth-reading artifacts. Add a new entry here after a new run lands
+// (see product-management/test/GENERATE-EXAMPLE.md).
+var EXAMPLES = [
+  {
+    slug: "2026-09-22-ebisu-kikata",
+    name: "Ebisu Kaiten IQ",
+    blurb: "A kaiten-zushi chain licensing its RFID plate-tracking platform to other restaurants. Reuses this repo's own historical worked-example use case as real content, and adds two new ones (freshness enforcement, checkout tally).",
+    hasDialogue: true,
+    artifacts: [
+      { label: "Press Release / FAQ", path: "01-prfaq.md" },
+      { label: "Use case: Chef Input (Commissioning)", path: "03a-chef-input-commissioning.md" },
+      { label: "Use case: Automatic Freshness Pull", path: "03b-automatic-freshness-pull.md" },
+      { label: "Architect debate", path: "06c-architect-debate.md" },
+      { label: "This run's findings", path: "README.md" }
+    ]
+  },
+  {
+    slug: "2026-09-22-continental-circuits",
+    name: "Continental Circuits",
+    blurb: "A U.S. factory manufacturing a security gateway from only U.S./EU-made chips. Exercises capital expenditure, physical supply chain, and export-control/sourcing compliance, a domain none of the software examples touch.",
+    hasDialogue: true,
+    artifacts: [
+      { label: "Press Release / FAQ", path: "01-prfaq.md" },
+      { label: "Use case: Qualify a New Chipset Supplier", path: "03a-qualify-a-new-chipset-supplier.md" },
+      { label: "Use case: Allocate Chipset Inventory to a Production Run", path: "03b-allocate-chipset-inventory-to-a-production-run.md" },
+      { label: "Architect debate", path: "06c-architect-debate.md" },
+      { label: "This run's findings", path: "README.md" }
+    ]
+  },
+  {
+    slug: "2026-09-22-dispatchiq",
+    name: "DispatchIQ",
+    blurb: "A for-profit dispatch/scheduling tool for small home-service businesses. Exercises the revenue/TAM branch of the PR/FAQ and the Architect Review debate feature.",
+    hasDialogue: true,
+    artifacts: [
+      { label: "Press Release / FAQ", path: "01-prfaq.md" },
+      { label: "Use case: Auto-Route a New Job", path: "03a-auto-route-a-new-job.md" },
+      { label: "Use case: Notify Customer of Technician ETA", path: "03b-notify-customer-of-technician-eta.md" },
+      { label: "Architect debate", path: "06c-architect-debate.md" },
+      { label: "This run's findings", path: "README.md" }
+    ]
+  },
+  {
+    slug: "2026-09-22-plotshare",
+    name: "PlotShare",
+    blurb: "A non-commercial city-parks-department program: a community garden scheduler and surplus-produce router. Exercises the non-revenue success-metrics branch of the PR/FAQ.",
+    hasDialogue: true,
+    artifacts: [
+      { label: "Press Release / FAQ", path: "01-prfaq.md" },
+      { label: "Use case: Claim a Surplus Listing", path: "03b-claim-surplus-listing.md" },
+      { label: "Architect debate", path: "06c-architect-debate.md" },
+      { label: "This run's findings", path: "README.md" }
+    ]
+  },
+  {
+    slug: "2026-09-22-claude-skills-meta",
+    name: "Claude Skills (meta)",
+    blurb: "Claude Skills announcing itself. The first run, predates the full dialogue-transcript convention, so it jumps straight to results.",
+    hasDialogue: false,
+    artifacts: [
+      { label: "Press Release / FAQ", path: "01-prfaq.md" },
+      { label: "Use case", path: "03-use-case-draft-full-use-case.md" },
+      { label: "Architect review", path: "06-architect-review.md" },
+      { label: "This run's findings", path: "00-README.md" }
+    ]
+  }
+];
+
+var els = {
+  picker: document.getElementById("example-picker"),
+  transcript: document.getElementById("transcript"),
+  playPause: document.getElementById("play-pause"),
+  restart: document.getElementById("restart"),
+  skip: document.getElementById("skip"),
+  speedBtns: document.querySelectorAll("button.speed"),
+  results: document.getElementById("results"),
+  resultsTitle: document.getElementById("results-title"),
+  resultsBlurb: document.getElementById("results-blurb"),
+  resultsList: document.getElementById("results-list"),
+  resultsFolder: document.getElementById("results-folder")
+};
+
+var state = { turns: [], index: 0, playing: false, speed: 1, timer: null, current: null };
+
+EXAMPLES.forEach(function (ex, i) {
+  var opt = document.createElement("option");
+  opt.value = i;
+  opt.textContent = ex.name;
+  els.picker.appendChild(opt);
+});
+
+function parseDialogue(text) {
+  var lines = text.split("\n");
+  var turns = [];
+  var current = null;
+  var turnRe = /^\*\*(Claude|User)([^*:]*):\*\*\s*(.*)$/;
+  lines.forEach(function (line) {
+    var headingMatch = line.match(/^(#{2,3})\s+(.*)$/);
+    var turnMatch = line.match(turnRe);
+    if (headingMatch) {
+      if (current) { turns.push(current); current = null; }
+      turns.push({ type: "section", text: headingMatch[2] });
+    } else if (turnMatch) {
+      if (current) turns.push(current);
+      var extra = (turnMatch[2] || "").trim();
+      current = {
+        type: turnMatch[1] === "Claude" ? "claude" : "user",
+        label: turnMatch[1] + (extra ? " " + extra : ""),
+        text: turnMatch[3]
+      };
+    } else if (line.match(/^#\s+Dialogue/)) {
+      // top title, skip
+    } else if (line.trim() === "") {
+      // blank line ends nothing by itself; paragraphs within a turn are separated by these
+    } else if (current) {
+      current.text += (current.text ? "\n" : "") + line;
+    }
+  });
+  if (current) turns.push(current);
+  return turns.filter(function (t) { return t.text && t.text.trim() !== ""; });
+}
+
+function resetPlayer() {
+  clearTimeout(state.timer);
+  state.playing = false;
+  state.index = 0;
+  els.transcript.innerHTML = "";
+  els.results.style.display = "none";
+  els.playPause.textContent = "Play";
+  els.playPause.disabled = false;
+  els.skip.disabled = false;
+}
+
+function loadExample(i) {
+  var ex = EXAMPLES[i];
+  resetPlayer();
+  showResultsFor(ex); // pre-fill so Skip works even before dialogue loads
+  els.results.style.display = "none";
+
+  if (!ex.hasDialogue) {
+    els.transcript.innerHTML = '<p class="note">This run predates the dialogue-transcript convention, so there\'s no turn-by-turn playback. Jumping straight to results.</p>';
+    els.playPause.disabled = true;
+    revealResults(ex);
+    return;
+  }
+
+  els.transcript.innerHTML = '<p class="note">Loading dialogue…</p>';
+  fetch(BASE + "product-management/test/output/" + ex.slug + "/dialogue.md")
+    .then(function (r) { if (!r.ok) throw new Error("fetch failed"); return r.text(); })
+    .then(function (text) {
+      state.turns = parseDialogue(text);
+      els.transcript.innerHTML = "";
+    })
+    .catch(function () {
+      els.transcript.innerHTML = '<p class="note">Could not load the dialogue transcript. Jumping straight to results.</p>';
+      els.playPause.disabled = true;
+      revealResults(ex);
+    });
+}
+
+function renderTurn(turn) {
+  var el = document.createElement("div");
+  if (turn.type === "section") {
+    el.className = "divider";
+    el.textContent = turn.text;
+  } else {
+    el.className = "bubble " + turn.type;
+    var who = document.createElement("span");
+    who.className = "who";
+    who.textContent = turn.type === "claude" ? (turn.label || "Claude") : "User (simulated)";
+    el.appendChild(who);
+    el.appendChild(document.createTextNode(turn.text));
+  }
+  els.transcript.appendChild(el);
+  els.transcript.scrollTop = els.transcript.scrollHeight;
+}
+
+function step() {
+  if (state.index >= state.turns.length) {
+    state.playing = false;
+    els.playPause.textContent = "Play";
+    var ex = EXAMPLES[els.picker.value];
+    revealResults(ex);
+    return;
+  }
+  renderTurn(state.turns[state.index]);
+  state.index++;
+  if (state.playing) {
+    state.timer = setTimeout(step, 1400 / state.speed);
+  }
+}
+
+function showResultsFor(ex) {
+  els.resultsTitle.textContent = ex.name + ": Artifacts";
+  els.resultsBlurb.textContent = ex.blurb;
+  els.resultsList.innerHTML = "";
+  ex.artifacts.forEach(function (a) {
+    var li = document.createElement("li");
+    var link = document.createElement("a");
+    link.href = TREE_BASE.replace("/tree/", "/blob/") + "product-management/test/output/" + ex.slug + "/" + a.path;
+    link.target = "_blank";
+    link.rel = "noopener";
+    link.textContent = a.label;
+    li.appendChild(link);
+    els.resultsList.appendChild(li);
+  });
+  els.resultsFolder.href = TREE_BASE + "product-management/test/output/" + ex.slug;
+}
+
+function revealResults(ex) {
+  showResultsFor(ex);
+  els.results.style.display = "block";
+  els.results.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+els.picker.addEventListener("change", function () { loadExample(this.value); });
+
+els.playPause.addEventListener("click", function () {
+  state.playing = !state.playing;
+  els.playPause.textContent = state.playing ? "Pause" : "Play";
+  if (state.playing) step();
+  else clearTimeout(state.timer);
+});
+
+els.restart.addEventListener("click", function () { loadExample(els.picker.value); });
+
+els.skip.addEventListener("click", function () {
+  clearTimeout(state.timer);
+  state.playing = false;
+  els.playPause.textContent = "Play";
+  revealResults(EXAMPLES[els.picker.value]);
+});
+
+els.speedBtns.forEach(function (btn) {
+  btn.addEventListener("click", function () {
+    state.speed = parseInt(this.dataset.speed, 10);
+    els.speedBtns.forEach(function (b) { b.classList.remove("active"); });
+    this.classList.add("active");
+  });
+});
+document.querySelector('button.speed[data-speed="1"]').classList.add("active");
+
+loadExample(0);
+</script>
+
+</body>
+</html>
