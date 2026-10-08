@@ -13,12 +13,16 @@ Followed by one sentence describing what the actor is doing and why.
 
 **Actors** — bullet list, one per actor, formatted as:
 `- <Actor Name>: <one-line description of their role>`
+List only the actors that take an action somewhere in this use case's Basic, Alternate, or
+Exception Paths. An actor that appears only in an Exception Path still belongs here. An
+actor from the wider document or discovery list that never acts in this use case does not.
 
 **Trigger(s)** *(optional, only when the flow starts from an external event rather than a
 prior use case)* — bullet list of what kicks off the flow.
 
-**Basic Path** — a table with columns `Step | Actor | Action`. Leave the Step column blank
-unless a step is referenced later. Every row must have a distinct step number, and no two
+**Basic Path** — a table with columns `Step | Actor | Action`. Number every row
+sequentially (1., 2., 3., ...), including consecutive rows by the same actor and every
+decision or check. Only the final END OF USE CASE row has a blank Step. No two
 consecutive rows may be the same actor performing the same action — if the same actor acts
 twice in a row, the second action must be distinct enough to plausibly branch into its own
 alternate or exception path (a decision, a check, a response), not a restatement of the
@@ -26,14 +30,21 @@ first. Final row is always:
 `| | | END OF USE CASE |`
 
 **Alternate Paths** — bullet list. Each item:
-`- Alternate Path (from Basic Path #<N>): <what diverges>`
-followed by a numbered list of the diverging steps, ending with either:
-`Use case continues at Basic Path #<N>.` (the path rejoins the Basic Path), or
+`- Alternate Path A<N> (from Basic Path #<N>): <what diverges>`
+where `<N>` is the Basic Path step the path branches from. The path's steps are labeled
+`A<N>.1`, `A<N>.2`, and so on. `A<N>.1` is the alternate version of Basic Path step N, and
+the steps continue from there. If two Alternate Paths branch from the same step, add a
+letter: `A<N>a`, `A<N>b` (steps `A<N>a.1`, `A<N>b.1`). Each step starts with the acting Actor's name in bold, followed by a
+colon, and any other Actor named in the step is also bold, e.g.
+`- A12.1 **Client System:** Receives webhook from **Service**`. Use the exact Actor name
+from the Actors list ("**Client System:**", never "The client system"). The final step is either:
+`Use case continues at Basic Path #<M>.` (the path rejoins the Basic Path), or
 `End of use case.` (the path is itself a terminal exit; see the "Client Update on First
-Launch" worked example's Exception Path A).
+Launch" worked example's Exception Path E3).
 
 **Exception Paths** — same pattern as Alternate Paths, but for error or failure branches
-instead of valid variations, and ending the same way: either a rejoin ("Use case continues
+instead of valid variations, with an `E` prefix (`Exception Path E<N>`, steps `E<N>.1`,
+`E<N>.2`), and ending the same way: either a rejoin ("Use case continues
 at Basic Path #<N>.") or a terminal exit ("End of use case."), whichever actually describes
 where the path goes. Use `TBD` for steps not yet worked out rather than leaving the
 item off.
@@ -108,20 +119,20 @@ that item in the system.
 
 **Exception Paths**
 
-- Exception Path (from Basic Path #5): System does not see any RFID tags to associate
-  5. System: Does not see any RFID tags and cannot associate any UIDs with menu item values.
-  6. System: Notifies Chef and asks Chef to take corrective action (make certain plates are
-     in workspace, make certain RFID antennas are working, etc).
-  7. Chef: Acknowledges message.
-  8. Use case continues at Basic Path #1.
+- Exception Path E5 (from Basic Path #5): System does not see any RFID tags to associate
+  - E5.1 **System:** Does not see any RFID tags and cannot associate any UIDs with menu item values.
+  - E5.2 **System:** Notifies **Chef** and asks **Chef** to take corrective action (make certain plates
+    are in workspace, make certain RFID antennas are working, etc).
+  - E5.3 **Chef:** Acknowledges message.
+  - E5.4 Use case continues at Basic Path #1.
 
-- Exception Path (from Basic Path #9): Chef does not confirm scan
-  9. Chef: Indicates that there is an error in the scan (number or type of plates does not
-     match).
-  10. System: Suggests corrective actions.
-  11. Chef: Acknowledges system message.
-  12. Chef: Makes any necessary changes.
-  13. Use case continues at Basic Path #4.
+- Exception Path E9 (from Basic Path #9): Chef does not confirm scan
+  - E9.1 **Chef:** Indicates that there is an error in the scan (number or type of plates does
+    not match).
+  - E9.2 **System:** Suggests corrective actions.
+  - E9.3 **Chef:** Acknowledges system message.
+  - E9.4 **Chef:** Makes any necessary changes.
+  - E9.5 Use case continues at Basic Path #4.
 
 **Post-Condition(s)**
 - Live Inventory is updated with the newly commissioned menu item and its associated RFID
@@ -175,25 +186,25 @@ updating to the latest version.
 
 **Alternate Paths**
 
-- Alternate Path (from Basic Path #6): Subscriber exits the client without updating
-  6. Subscriber: Does not click the update link and exits the application.
-  7. Use case continues at Basic Path #1 when the client re-launches.
+- Alternate Path A6 (from Basic Path #6): Subscriber exits the client without updating
+  - A6.1 **Subscriber:** Does not click the update link and exits the application.
+  - A6.2 Use case continues at Basic Path #1 when the client re-launches.
 
 **Exception Paths**
 
-- Exception Path (from Basic Path #3): Platform does not respond, or the network is
+- Exception Path E3 (from Basic Path #3): Platform does not respond, or the network is
   unavailable
-  3. Platform: Does not respond, or the network is unavailable.
-  4. Client Application: Returns a friendly message ("Unable to download latest version;
-     please try again later") and shows a link to the [PARTNER_NAME] content site.
-  5. Subscriber: Clicks the content site link.
-  6. Client Application: Launches the Device Browser to the content site home page.
-  7. End of use case.
+  - E3.1 **Platform:** Does not respond, or the network is unavailable.
+  - E3.2 **Client Application:** Returns a friendly message ("Unable to download latest version;
+    please try again later") and shows a link to the [PARTNER_NAME] content site.
+  - E3.3 **Subscriber:** Clicks the content site link.
+  - E3.4 **Client Application:** Launches the **Device Browser** to the content site home page.
+  - E3.5 End of use case.
 
 **Post-Condition(s)**
 - **Basic Path exit:** Client Application's installed version matches the version Platform most
   recently delivered in the bundle response.
-- **Exception Path A exit (Platform unreachable):** Client Application's installed version is
+- **Exception Path E3 exit (Platform unreachable):** Client Application's installed version is
   unchanged; Subscriber's device browser has loaded the [PARTNER_NAME] content site home
   page.
 

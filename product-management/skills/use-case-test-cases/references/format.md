@@ -9,7 +9,7 @@ Alternate Path, or one Exception Path.
 - **Test Case ID** — `TC-<UseCaseShortName>-<NN>`, e.g. `TC-ClientUpdate-01`.
 - **Title** — short scenario description.
 - **Covers** — the exact path label from the source use case (`Basic Path`, `Alternate Path
-  A`, `Exception Path B`, etc.).
+  A6`, `Exception Path E3`, etc.).
 - **Preconditions** — the use case's Assumptions, plus any state needed to trigger this
   specific path.
 - **Steps** — numbered actions a tester (or automation) performs and observes.
@@ -58,7 +58,7 @@ single table cell with a long numbered list gets unreadable:
 
 Source use case: "Client Update on First Launch" (see the use-case-uml skill's
 `references/format.md` for the full use case this is built from — same Basic Path,
-Alternate Path A, and Exception Path A, with Post-Condition(s) given per exit point).
+Alternate Path A6, and Exception Path E3, with Post-Condition(s) given per exit point).
 
 ### TC-ClientUpdate-01: Successful upgrade
 
@@ -84,7 +84,7 @@ Alternate Path A, and Exception Path A, with Post-Condition(s) given per exit po
 
 ### TC-ClientUpdate-02: Subscriber exits without updating
 
-**Covers:** Alternate Path A
+**Covers:** Alternate Path A6
 
 **Preconditions:**
 - Same as TC-ClientUpdate-01, through the bundled page being displayed.
@@ -102,7 +102,7 @@ Alternate Path A, and Exception Path A, with Post-Condition(s) given per exit po
 
 ### TC-ClientUpdate-03: Platform unreachable
 
-**Covers:** Exception Path A
+**Covers:** Exception Path E3
 
 **Preconditions:**
 - Subscriber has installed the search application (or it is pre-installed).
