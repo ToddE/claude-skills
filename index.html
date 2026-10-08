@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Claude Skills</title>
-<meta name="description" content="A collection of skills for Claude AI: writing rules, PR/FAQ documents, a full use-case-to-tracker-issue pipeline, and architecture recommendations.">
+<meta name="description" content="Skills for Claude AI: writing rules, PR/FAQ documents, use cases, test cases, requirements, and architecture recommendations. Use them as a pipeline or one at a time.">
 <style>
   :root { color-scheme: light dark; }
   body {
@@ -42,7 +42,15 @@
     margin-top: 0.75rem;
   }
   .cta:hover { opacity: 0.9; }
-  ul.skills li { margin-bottom: 0.4rem; }
+  h2 { font-size: 1.15rem; margin-top: 2.25rem; }
+  ul.skills { list-style: none; padding: 0; }
+  ul.skills li { padding: 0.75rem 0; border-bottom: 1px solid #eee; }
+  ul.skills .start { color: #666; }
+  ul.skills .links { font-size: 0.85rem; margin-top: 0.3rem; }
+  @media (prefers-color-scheme: dark) {
+    ul.skills li { border-color: #2a2a2a; }
+    ul.skills .start { color: #999; }
+  }
   code { background: #f2f2f2; padding: 0.1rem 0.35rem; border-radius: 4px; font-size: 0.9em; }
   footer { margin-top: 2.5rem; font-size: 0.85rem; color: #888; }
 </style>
@@ -69,17 +77,49 @@
 
 <p>Working Backwards PR/FAQ is the natural entry point: it clarifies what you're building and why before anything else. From there, the other skills pick up the thread: breaking the idea into use cases, writing each one out, generating test cases, and deriving trackable requirements you can export to Jira or GitHub Issues. Once there's enough to work with, Architect Review turns it into a structured build recommendation.</p>
 
+<h2>Use one skill on its own</h2>
+<p>Each pipeline skill also works by itself. When you start mid-pipeline, the skill asks for what it needs instead of requiring the earlier steps. Use <strong>Try in claude.ai</strong> to open a chat with just that skill loaded, or download its <code>.skill</code> file to install it.</p>
+
 <ul class="skills">
-  <li><strong>Clean Style</strong>: an anti-AI-slop checklist every other skill's output defers to.</li>
-  <li><strong>Working Backwards PR/FAQ</strong>: press release, FAQ, and business case for a new idea.</li>
-  <li><strong>Use Case Discovery</strong>: breaks a feature down into a candidate list of use cases.</li>
-  <li><strong>Use Case UML</strong>: writes a use case in a fixed, repeatable format.</li>
-  <li><strong>Use Case Test Cases</strong>: generates test cases from a use case's paths.</li>
-  <li><strong>Use Case Requirements</strong>: derives trackable requirements, with or without a use case.</li>
-  <li><strong>Architect Review</strong>: a structured architecture recommendation from a specific Sr. Architect persona.</li>
+  <li>
+    <strong>Working Backwards PR/FAQ</strong>: Press release, FAQ, and business case for a new idea. <span class="start">Start with a rough idea.</span>
+    <div class="links"><a class="try" data-path="product-management/skills/working-backwards-prfaq" href="https://github.com/ToddE/claude-skills/tree/main/product-management/skills/working-backwards-prfaq" target="_blank" rel="noopener">Try in claude.ai</a> &middot; <a href="https://github.com/ToddE/claude-skills/releases/latest/download/working-backwards-prfaq.skill">Download .skill</a> &middot; <a href="https://github.com/ToddE/claude-skills/tree/main/product-management/skills/working-backwards-prfaq" target="_blank" rel="noopener">Source</a></div>
+  </li>
+  <li>
+    <strong>Use Case Discovery</strong>: Breaks a feature down into a list of candidate use cases to review before writing any in full. <span class="start">Start with a feature description.</span>
+    <div class="links"><a class="try" data-path="product-management/skills/use-case-discovery" href="https://github.com/ToddE/claude-skills/tree/main/product-management/skills/use-case-discovery" target="_blank" rel="noopener">Try in claude.ai</a> &middot; <a href="https://github.com/ToddE/claude-skills/releases/latest/download/use-case-discovery.skill">Download .skill</a> &middot; <a href="https://github.com/ToddE/claude-skills/tree/main/product-management/skills/use-case-discovery" target="_blank" rel="noopener">Source</a></div>
+  </li>
+  <li>
+    <strong>Use Case UML</strong>: Writes one use case in a fixed format: actors, basic path, alternate and exception paths, post-conditions. <span class="start">Start with a flow you want documented.</span>
+    <div class="links"><a class="try" data-path="product-management/skills/use-case-uml" href="https://github.com/ToddE/claude-skills/tree/main/product-management/skills/use-case-uml" target="_blank" rel="noopener">Try in claude.ai</a> &middot; <a href="https://github.com/ToddE/claude-skills/releases/latest/download/use-case-uml.skill">Download .skill</a> &middot; <a href="https://github.com/ToddE/claude-skills/tree/main/product-management/skills/use-case-uml" target="_blank" rel="noopener">Source</a></div>
+  </li>
+  <li>
+    <strong>Use Case Test Cases</strong>: Generates test cases from a use case's paths and post-conditions. <span class="start">Start with a use case you already have.</span>
+    <div class="links"><a class="try" data-path="product-management/skills/use-case-test-cases" href="https://github.com/ToddE/claude-skills/tree/main/product-management/skills/use-case-test-cases" target="_blank" rel="noopener">Try in claude.ai</a> &middot; <a href="https://github.com/ToddE/claude-skills/releases/latest/download/use-case-test-cases.skill">Download .skill</a> &middot; <a href="https://github.com/ToddE/claude-skills/tree/main/product-management/skills/use-case-test-cases" target="_blank" rel="noopener">Source</a></div>
+  </li>
+  <li>
+    <strong>Use Case Requirements</strong>: Derives trackable requirements and exports them as Jira CSV or GitHub Issues. <span class="start">Start with a use case, or just a feature description.</span>
+    <div class="links"><a class="try" data-path="product-management/skills/use-case-requirements" href="https://github.com/ToddE/claude-skills/tree/main/product-management/skills/use-case-requirements" target="_blank" rel="noopener">Try in claude.ai</a> &middot; <a href="https://github.com/ToddE/claude-skills/releases/latest/download/use-case-requirements.skill">Download .skill</a> &middot; <a href="https://github.com/ToddE/claude-skills/tree/main/product-management/skills/use-case-requirements" target="_blank" rel="noopener">Source</a></div>
+  </li>
+  <li>
+    <strong>Architect Review</strong>: A structured architecture recommendation from a specific Sr. Architect persona. <span class="start">Start with whatever you have: a PR/FAQ, use cases, or a description.</span>
+    <div class="links"><a class="try" data-path="product-management/skills/architect-review" href="https://github.com/ToddE/claude-skills/tree/main/product-management/skills/architect-review" target="_blank" rel="noopener">Try in claude.ai</a> &middot; <a href="https://github.com/ToddE/claude-skills/releases/latest/download/architect-review.skill">Download .skill</a> &middot; <a href="https://github.com/ToddE/claude-skills/tree/main/product-management/skills/architect-review" target="_blank" rel="noopener">Source</a></div>
+  </li>
 </ul>
 
-<p><strong>Only need use cases?</strong> <a href="https://github.com/ToddE/claude-skills/tree/main/use-cases/skills/use-case-builder">Use Case Builder</a> runs use case discovery and then writes each use case in full, in the same format as the pipeline. It works on its own, with no other skills installed. Install it with <code>/plugin install use-cases</code> after adding the marketplace, or <a href="https://github.com/ToddE/claude-skills/releases/latest/download/use-case-builder.skill">download the .skill file</a>.</p>
+<h2>Other skills</h2>
+<ul class="skills">
+  <li>
+    <strong>Use Case Builder</strong>: Use Case Discovery and Use Case UML in one skill: scopes a feature into use cases, then writes each one in full. <span class="start">Start with a feature description.</span>
+    <div class="links"><a class="try" data-path="use-cases/skills/use-case-builder" href="https://github.com/ToddE/claude-skills/tree/main/use-cases/skills/use-case-builder" target="_blank" rel="noopener">Try in claude.ai</a> &middot; <a href="https://github.com/ToddE/claude-skills/releases/latest/download/use-case-builder.skill">Download .skill</a> &middot; <a href="https://github.com/ToddE/claude-skills/tree/main/use-cases/skills/use-case-builder" target="_blank" rel="noopener">Source</a></div>
+  </li>
+  <li>
+    <strong>Clean Style</strong>: An anti-AI-slop checklist for external-facing writing. The other skills use it when it's installed. <span class="start">Start with a draft to clean up.</span>
+    <div class="links"><a class="try" data-path="clean-style" href="https://github.com/ToddE/claude-skills/tree/main/clean-style" target="_blank" rel="noopener">Try in claude.ai</a> &middot; <a href="https://github.com/ToddE/claude-skills/releases/latest/download/clean-style.skill">Download .skill</a> &middot; <a href="https://github.com/ToddE/claude-skills/tree/main/clean-style" target="_blank" rel="noopener">Source</a></div>
+  </li>
+</ul>
+
+<p style="font-size:0.85rem;color:#888;">In Claude Code you can install the whole pipeline at once: <code>/plugin marketplace add ToddE/claude-skills</code>, then <code>/plugin install product-management</code>. Use Case Builder installs with <code>/plugin install use-cases</code>.</p>
 
 <p><a href="examples.html">Watch a full example run &rarr;</a> — a real intake played back turn by turn, or skip straight to what it produced.</p>
 
@@ -101,6 +141,16 @@
     + "(product-management/skills/use-case-requirements/SKILL.md), fetching each one from that repo when we get there. "
     + "Start with your first question for the PR/FAQ.";
   document.getElementById("get-started").href = "https://claude.ai/new?q=" + encodeURIComponent(prompt);
+
+  var raw = "https://raw.githubusercontent.com/ToddE/claude-skills/main/";
+  document.querySelectorAll("a.try").forEach(function (link) {
+    var path = link.getAttribute("data-path");
+    var skillPrompt = "Fetch " + raw + path + "/SKILL.md and follow it for this conversation. "
+      + "When it tells you to read another file, such as references/format.md, fetch it from " + raw + path + "/ followed by that relative path. "
+      + "If it mentions another skill that isn't available here, skip that step. "
+      + "Start with your first question.";
+    link.href = "https://claude.ai/new?q=" + encodeURIComponent(skillPrompt);
+  });
 </script>
 
 </body>
