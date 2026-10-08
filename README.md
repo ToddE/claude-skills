@@ -13,14 +13,14 @@ A collection of skills for [Claude AI](https://claude.ai). Each one adds a speci
 | --- | --- | --- |
 | [Clean Style](#clean-style) | Applies a strict anti-AI-slop checklist to external-facing prose. The baseline every other skill's output defers to. | Sonnet 5, medium |
 | [Use Case Builder](#use-case-builder) | Scopes a feature into candidate use cases, then writes each one in full. Standalone; no other skills needed. | Sonnet 5, medium |
-| [Product Management Pipeline](product-management/README.md) (plugin, 6 skills) | This set of skills is meant to give your ideas a kickstart towards becoming a product. <br/>Working Backwards PR/FAQ &rarr; Use Case Discovery &rarr; Use Case UML &rarr; {Test Cases, Requirements} &rarr; Architect Review. <br/>See full detail, triggers, and example prompts for each: [product-management/README.md](product-management/README.md). | Varies per skill; see that file |
+| [Product Management Pipeline](product-management/README.md) (plugin, 7 skills) | This set of skills is meant to give your ideas a kickstart towards becoming a product. <br/>Working Backwards PR/FAQ &rarr; Use Case Discovery &rarr; Use Case UML &rarr; {Test Cases, Requirements} &rarr; Architect Review &rarr; Build Plan (for [claude-build](https://github.com/ToddE/claude-build)). <br/>See full detail, triggers, and example prompts for each: [product-management/README.md](product-management/README.md). | Varies per skill; see that file |
 
 ## How to Use These Skills
 
 This repo holds two kinds of things: Clean Style, a general-purpose writing skill, and a
-product-management pipeline (Working Backwards PR/FAQ through Architect Review) bundled
-together as one plugin, since those six skills can hand off to each other across an
-initiative's lifecycle rather than working alone. Each of these six  skills is also packaged
+product-management pipeline (Working Backwards PR/FAQ through Build Plan) bundled
+together as one plugin, since those seven skills can hand off to each other across an
+initiative's lifecycle rather than working alone. Each of these seven skills is also packaged
 individually as a `.skill` file and attached to [GitHub Releases](https://github.com/ToddE/claude-skills/releases). 
 
 If you want to try one before committing to it, start with Option 0.
@@ -47,7 +47,7 @@ Installs straight from this repo; no download step, and updates whenever this re
 
 ### Option 2: Install from file (any Claude Code host)
 
-1. Download the `.skill` file for the skill you want. Clean Style's and Use Case Builder's links are below; the six Product Management Pipeline skills' links are in [product-management/README.md](product-management/README.md). All of them point to the latest release.
+1. Download the `.skill` file for the skill you want. Clean Style's and Use Case Builder's links are below; the seven Product Management Pipeline skills' links are in [product-management/README.md](product-management/README.md). All of them point to the latest release.
 2. Open Claude Code settings and go to **Skills**.
 3. Click **Install from file** and select the `.skill` file, or drag and drop it.
 
@@ -112,9 +112,9 @@ One skill that runs use case discovery and then writes each use case in full. It
 - "Write a use case for how a returned online order gets restocked"
 - "Add an exception path to this use case for when the payment service times out"
 
-### Product Management Pipeline (plugin, 6 skills)
+### Product Management Pipeline (plugin, 7 skills)
 
-Working Backwards PR/FAQ &rarr; Use Case Discovery &rarr; Use Case UML &rarr; {Use Case Test Cases, Use Case Requirements} &rarr; Architect Review. Six skills covering an initiative's lifecycle from a rough idea through a structured architecture recommendation, bundled as one plugin since they hand off to each other. Each is also available as its own `.skill` file or folder if you only want one.
+Working Backwards PR/FAQ &rarr; Use Case Discovery &rarr; Use Case UML &rarr; {Use Case Test Cases, Use Case Requirements} &rarr; Architect Review &rarr; Build Plan. Seven skills covering an initiative's lifecycle from a rough idea through a structured architecture recommendation and an implementation plan that [claude-build](https://github.com/ToddE/claude-build) can run, bundled as one plugin since they hand off to each other. Each is also available as its own `.skill` file or folder if you only want one.
 
 Full detail for each skill, triggers, example prompts, and the pipeline diagram: **[product-management/README.md](product-management/README.md)**. See it run end to end with real, saved example runs in [product-management/test/output/](product-management/test/output/), or watch one play back turn by turn on the [GitHub Pages site](https://todde.github.io/claude-skills/examples.html).
 
