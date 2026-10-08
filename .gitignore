@@ -4,3 +4,6 @@
 # OS and editor junk
 .DS_Store
 *.swp
+
+# Personal editor styling for this workspace
+.vscode/
