@@ -5,12 +5,14 @@ on:
     paths:
       - "product-management/skills/use-case-uml/references/**"
       - "product-management/skills/use-case-discovery/references/**"
+      - "product-management/skills/use-case-test-cases/references/**"
       - "use-cases/**"
       - "scripts/check-use-case-sync.sh"
   pull_request:
     paths:
       - "product-management/skills/use-case-uml/references/**"
       - "product-management/skills/use-case-discovery/references/**"
+      - "product-management/skills/use-case-test-cases/references/**"
       - "use-cases/**"
       - "scripts/check-use-case-sync.sh"
 

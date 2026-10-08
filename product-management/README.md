@@ -165,7 +165,8 @@ Generates test cases directly from a Use Case UML document: one per Basic Path, 
 **Triggers when you mention:** writing test cases, generating tests, or turning a use case into test cases.
 
 **What it does:**
-- Reads a completed use case (Basic Path, Alternate Paths, Exception Paths, Post-Condition(s))
+- Reads a completed use case (Basic Path, Alternate Paths, Exception Paths, Post-Condition(s)) and references it by name and step label rather than restating it
+- With no use case yet, writes one first in the Use Case UML format and confirms it with you
 - Produces one test case per path with a Test Case ID, Preconditions, Steps, and an Expected Result traced directly back to the use case's Post-Condition(s), never invented
 - Flags it, and refuses to guess, if the source use case's Post-Condition(s) aren't written as checkable states yet
 
