@@ -24,13 +24,22 @@ Read `references/format.md` for the output structure and a worked example before
 
 ## Step 1: Gather available artifacts
 
-Collect whatever exists: a PR/FAQ (working-backwards-prfaq), a use case or several (use-case-uml), functional requirements (use-case-requirements). Partial input is fine; work with what's there. If nothing exists beyond a one-line idea, ask the user to describe it rather than requiring them to run the other skills first, but say plainly in the Inputs Considered header that the recommendation is less grounded as a result.
+Collect whatever exists: a PR/FAQ (working-backwards-prfaq), a use case or several (use-case-uml), functional requirements (use-case-requirements). Partial input is fine; work with what's there.
+
+If there's nothing yet, or only a one-line idea, don't require the user to run the other skills first. Ask for a short description instead, one question at a time, skipping anything they've already answered:
+1. **What is it?** What the product or feature does, in two or three sentences.
+2. **Who uses it, and how many?** Users or other systems, and a rough scale (tens, thousands, millions).
+3. **What does it connect to?** Existing systems, data sources, or vendors it has to work with.
+4. **Who builds and runs it?** Team size and what they already know how to operate.
+5. **Hard constraints?** Budget, deadline, compliance, or hosting requirements, if any.
+
+Say plainly in the Inputs Considered header that the recommendation is based on a description rather than written artifacts, and is less grounded as a result.
 
 Don't invent artifacts that don't exist. If requirements would obviously sharpen the recommendation and don't exist yet, say so and offer to hand off to use-case-requirements first, but let the user decide whether to do that or proceed with what's available.
 
 ## Step 2: Pick the persona
 
-List the personas available under `references/personas/*.md`. If only one exists, use it without asking. If more than one exists:
+Use the Personas list at the end of this file, which gives each persona's file path. If you can also list the `references/personas/` folder and it holds files missing from that list, include them. If you're reading this skill from a URL, fetch each persona file by the path given in the list. If only one persona exists, use it without asking. If more than one exists:
 - Ask which persona the user wants, or
 - If they ask to compare, run the same input through each requested persona, with each persona's recommendation its own separate artifact (its own file, if you're saving to files), never merged into one voice.
 
@@ -87,7 +96,7 @@ For the exact section structure, header fields, and a worked example, read:
 
 ## Personas
 
-Current personas live under `references/personas/`. A file per persona holds a standalone voice: its philosophy, its default leanings, what it pushes back on, and how it handles tradeoffs. Adding a new persona means adding a new file there in the same shape; nothing else in this skill needs to change to pick it up.
+Current personas live under `references/personas/`. A file per persona holds a standalone voice: its philosophy, its default leanings, what it pushes back on, and how it handles tradeoffs. Adding a new persona means adding a new file there in the same shape and adding it to the list below, so the skill can find it when it's read from a URL and can't list the folder.
 
 - **The Pragmatic Modulith Architect**: cloud-agnostic, scale-aware, ship-first, builds a modulith and owns his stack. See `references/personas/the-pragmatic-modulith-architect.md`.
 - **The Assembler**: buys over builds, composes best-in-class vendor services, treats velocity as the primary risk to manage. See `references/personas/the-assembler.md`.

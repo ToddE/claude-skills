@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-# Check that the standalone use-case-builder skill's format specs match the
-# product-management originals. Only the spec section above the worked examples
-# is compared, since the standalone skill uses its own examples.
+# Check that bundled copies of the use case format specs match the
+# product-management originals. For use-case-builder, only the spec section above
+# the worked examples is compared, since it uses its own examples. The copy inside
+# use-case-test-cases must match exactly.
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
@@ -22,6 +23,12 @@ check() {
 
 check "$pm/use-case-uml/references/format.md" "$uc/use-case-format.md"
 check "$pm/use-case-discovery/references/format.md" "$uc/candidate-list.md"
+
+# Exact copies (same worked examples too)
+if ! diff -u "$pm/use-case-uml/references/format.md" "$pm/use-case-test-cases/references/use-case-format.md"; then
+  echo "Out of sync: $pm/use-case-test-cases/references/use-case-format.md (copy it from $pm/use-case-uml/references/format.md)" >&2
+  status=1
+fi
 
 [ "$status" -eq 0 ] && echo "Use case format specs are in sync."
 exit "$status"
