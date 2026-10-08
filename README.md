@@ -12,6 +12,7 @@ A collection of skills for [Claude AI](https://claude.ai). Each one adds a speci
 | Skill / Plugin | What it does | Suggested model |
 | --- | --- | --- |
 | [Clean Style](#clean-style) | Applies a strict anti-AI-slop checklist to external-facing prose. The baseline every other skill's output defers to. | Sonnet 5, medium |
+| [Use Case Builder](#use-case-builder) | Scopes a feature into candidate use cases, then writes each one in full. Standalone; no other skills needed. | Sonnet 5, medium |
 | [Product Management Pipeline](product-management/README.md) (plugin, 6 skills) | This set of skills is meant to give your ideas a kickstart towards becoming a product. <br/>Working Backwards PR/FAQ &rarr; Use Case Discovery &rarr; Use Case UML &rarr; {Test Cases, Requirements} &rarr; Architect Review. <br/>See full detail, triggers, and example prompts for each: [product-management/README.md](product-management/README.md). | Varies per skill; see that file |
 
 ## How to Use These Skills
@@ -37,6 +38,7 @@ This works well to kick the tires. Nothing persists between sessions, and it won
 /plugin marketplace add ToddE/claude-skills
 /plugin install product-management
 /plugin install clean-style
+/plugin install use-cases
 ```
 
 Installs straight from this repo; no download step, and updates whenever this repo does. Skills inside the `product-management` plugin are namespaced (e.g. `/product-management:working-backwards-prfaq`) but still trigger automatically from a matching request the same as any standalone skill.
@@ -45,13 +47,13 @@ Installs straight from this repo; no download step, and updates whenever this re
 
 ### Option 2: Install from file (any Claude Code host)
 
-1. Download the `.skill` file for the skill you want. Clean Style's link is below; the six Product Management Pipeline skills' links are in [product-management/README.md](product-management/README.md). Both always point to the latest release.
+1. Download the `.skill` file for the skill you want. Clean Style's and Use Case Builder's links are below; the six Product Management Pipeline skills' links are in [product-management/README.md](product-management/README.md). All of them point to the latest release.
 2. Open Claude Code settings and go to **Skills**.
 3. Click **Install from file** and select the `.skill` file, or drag and drop it.
 
 ### Option 3: Drop the folder into `.claude/skills`
 
-These skills are all plain folders too: `SKILL.md`, a `references/` directory, and a `LICENSE` file. Skip the `.skill` packaging and use the folder directly. Clean Style lives at the repo root (`clean-style/`); the other six live under `product-management/skills/<skill-name>/`.
+These skills are all plain folders too: `SKILL.md`, a `references/` directory, and a `LICENSE` file. Skip the `.skill` packaging and use the folder directly. Clean Style lives at the repo root (`clean-style/`), Use Case Builder at `use-cases/skills/use-case-builder/`, and the other six under `product-management/skills/<skill-name>/`.
 
 - **Project-level** (scoped to one repo): clone this repo, then copy the folder you want into `<your-project>/.claude/skills/<skill-name>/`.
 - **User-level** (available in every Claude Code session on your machine): copy the folder into `~/.claude/skills/<skill-name>/`.
@@ -90,6 +92,25 @@ A strict anti-AI-slop checklist applied to any external-facing prose, and the sh
 - "Clean this email up so it doesn't sound like AI wrote it"
 - "Tighten this customer-facing doc"
 - "Rewrite this blog post draft to read naturally"
+
+### Use Case Builder
+
+[Download (.skill)](https://github.com/ToddE/claude-skills/releases/latest/download/use-case-builder.skill)
+
+One skill that runs use case discovery and then writes each use case in full. It uses the same format as the Use Case Discovery and Use Case UML skills in the Product Management Pipeline, packaged on its own for anyone who only needs use cases. Install it as the `use-cases` plugin, or use the `use-cases/skills/use-case-builder/` folder directly.
+
+**Triggers when you mention:** "what use cases do we need for this," "break this down into use cases," "write a use case for X," or adding an alternate or exception path to an existing use case.
+
+**What it does:**
+- Interviews you briefly about the feature, then proposes a candidate list of use cases for you to confirm
+- Writes each confirmed use case with Assumptions, Actors, Trigger(s), a numbered Basic Path, labeled Alternate and Exception Paths, Post-Condition(s), and Open Issues/Notes
+- Lists only the actors that act in each use case, and keeps actor names consistent across the set
+- Self-checks each draft against the format before showing it to you
+
+**Example prompts:**
+- "What use cases do we need for a volunteer shift-scheduling tool?"
+- "Write a use case for how a returned online order gets restocked"
+- "Add an exception path to this use case for when the payment service times out"
 
 ### Product Management Pipeline (plugin, 6 skills)
 

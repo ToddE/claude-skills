@@ -1,31 +1,34 @@
 # Candidate Use Case List Format
 
 This is a scoping artifact, not a use case. It exists to agree on what set of use cases an
-initiative needs before spending time writing each one out in full with use-case-uml.
+initiative needs before spending time writing each one out in full.
 
 ## Table format
 
 | Name | Summary | Rough Actors | Rough Trigger |
 | --- | --- | --- | --- |
-| `<Use Case Name>` | One sentence. | Comma-separated, 2-4 actors. | Blank if it continues from another candidate. |
+| `<Use Case Name>` | One sentence. | Comma-separated, usually 2-6 actors. | Blank if it continues from another candidate. |
 
 ## Conventions
 
 - **Name** must be short enough to become the eventual `Use Case: <Short Name>` title
   as-is — don't write a sentence here.
-- **Summary** is one sentence: what the actor is doing and why, same shape use-case-uml
-  expects as the use case's opening line.
+- **Summary** is one sentence: what the actor is doing and why, same shape as the full use
+  case's opening line.
 - **Rough Actors** should reuse the same name for the same real-world thing across every
   row in the table. If two rows both involve "the backend platform," decide on one name for
-  it now (e.g. "Platform") — use-case-uml will enforce this consistency later, so fixing it
+  it now (e.g. "Platform"). The full use case format requires this consistency, so fixing it
   here avoids rework.
+- **Rough Actors** has no hard limit, but 2-6 is typical. A list much longer than that
+  usually means the candidate is two flows. A single-actor flow, common for internal
+  systems, should name the system's modules or services as separate actors instead.
 - **Rough Trigger** is left blank when a candidate is really a continuation of another
   candidate's flow rather than its own externally-triggered entry point. A blank Rough
   Trigger is a signal the two candidates might actually be one use case with an Alternate
   Path, not two — flag it for the user to confirm during review.
 - Order the table in a rough natural sequence when one exists (setup/onboarding first,
   primary flow next, then supporting/error-recovery flows) — this ordering becomes the
-  suggested drafting order when handing off to use-case-uml.
+  suggested drafting order for the full use cases.
 
 ## Worked Example
 

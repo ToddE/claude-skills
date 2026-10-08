@@ -11,6 +11,11 @@
       "description": "Apply a strict anti-AI-slop writing checklist to external-facing prose. The shared baseline other skills in this repo defer to."
     },
     {
+      "name": "use-cases",
+      "source": "./use-cases",
+      "description": "Standalone use case skill: scope a feature into candidate use cases, then write each one in full (actors, basic/alternate/exception paths, post-conditions) in one fixed format. No other skills required."
+    },
+    {
       "name": "product-management",
       "source": "./product-management",
       "description": "Six skills covering an initiative's full lifecycle: Working Backwards PR/FAQ, use-case discovery, UML use cases, test cases, trackable requirements, and persona-driven architecture review with an opt-in debate."
