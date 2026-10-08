@@ -49,6 +49,14 @@ at Basic Path #<N>.") or a terminal exit ("End of use case."), whichever actuall
 where the path goes. Use `TBD` for steps not yet worked out rather than leaving the
 item off.
 
+**Saving state from paths** — whenever an Alternate or Exception Path makes a decision or
+produces data that the Basic Path or any other Alternate/Exception Path uses, the path must
+include a step that saves that state (e.g. "**Kiosk:** Attaches the approving staff ID to the
+pending checkout"). Each later step that uses or records that state names it (e.g. "Records
+the checkout, including the override approver ID if one was set"). The Basic Path then
+manages the state from that point, and the Post-Condition(s) for its exit cover it. A step
+that relies on state no earlier step saved is a gap: add the save step.
+
 **Post-Condition(s)** — bullet list of what is verifiably true once the use case ends
 (successfully or via a terminal Alternate/Exception Path). These exist so a test case can be
 written directly from them, so phrase each as a checkable state, not a narrative summary:
@@ -69,7 +77,7 @@ writing the use case.
 - Link to a related use case with `[Use Case: <Name>](#<anchor>)` rather than restating its
   steps.
 - Keep Actor names consistent across use cases in the same document (e.g. always
-  "Platform," not "the platform").
+  "Platform," not "the backend" in one place and "the server" in another).
 
 ---
 

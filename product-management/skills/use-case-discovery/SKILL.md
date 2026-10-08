@@ -38,7 +38,7 @@ Break the initiative into discrete use cases: each one should be a single flow w
 For each candidate, capture only:
 - **Name**: matches the `Use Case: <Short Name>` title convention use-case-uml uses.
 - **Summary**: one sentence, same shape as use-case-uml's one-sentence description.
-- **Rough Actors**: the 2-4 actors most likely involved. Not final, just enough to sanity check overlap and consistency across the list.
+- **Rough Actors**: the actors most likely involved, usually 2-6 (see `references/format.md`). Not final, just enough to sanity check overlap and consistency across the list.
 - **Rough Trigger**: what starts the flow, if external. Leave blank if it's clearly a continuation from another candidate use case.
 
 Present the full candidate list as a table (see `references/format.md`) before writing any use case in full. Group candidates loosely if a natural sequence emerges (setup, then primary use, then error or support flows); this becomes useful ordering when handing off to use-case-uml.

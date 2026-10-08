@@ -1,0 +1,12 @@
+{
+  "name": "use-cases",
+  "displayName": "Use Case Builder",
+  "description": "Scope a feature into a list of candidate use cases, then write each one out in full: actors, basic path, alternate and exception paths, and post-conditions, in one fixed format.",
+  "version": "1.0.0",
+  "author": {
+    "name": "A. Todd Emerson",
+    "url": "https://github.com/ToddE/claude-skills"
+  },
+  "license": "MIT",
+  "repository": "https://github.com/ToddE/claude-skills"
+}
