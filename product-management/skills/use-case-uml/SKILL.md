@@ -28,7 +28,7 @@ If the user arrives with a confirmed candidate from the use-case-discovery skill
 If there's no confirmed candidate, or the candidate has no PR/FAQ or brief behind it, don't draft blind and don't generate the use case from a one-line prompt either. Run the interview instead, asking enough to nail down:
 - **Title and one-sentence purpose**: what is the actor doing, and why.
 - **Assumptions**: what must already be true before step 1 (prior setup, prior use cases, provisioning, permissions).
-- **Actors**: every system, app, person, or service that takes an action in the flow.
+- **Actors**: every system, app, person, or service that takes an action in this use case's Basic, Alternate, or Exception Paths. Nothing else.
 - **Trigger** (only if the flow starts from an external event rather than a prior use case, e.g. a webhook arriving, a user action outside this flow).
 - **The happy path**: the ordered sequence of actor/action pairs from start to end.
 - **Known variations**: valid alternate branches (different but successful paths) and failure/error branches (exception paths), and where each rejoins the basic path.
@@ -43,15 +43,15 @@ Follow the structure and conventions in `references/format.md` exactly:
 
 1. `Use Case: <Short Name>` title, one-sentence description.
 2. **Assumptions** (bullets)
-3. **Actors** (bullets, `- <Actor Name>: <one-line role>`)
+3. **Actors** (bullets, `- <Actor Name>: <one-line role>`): list only the actors that take an action in this use case's Basic, Alternate, or Exception Paths. Don't copy in a document-wide or discovery-level actor roster; an actor that belongs to other use cases but never acts in this one stays off this list.
 4. **Trigger(s)**: only include this section if the flow starts from an external event.
    Omit it entirely otherwise; don't write "N/A."
-5. **Basic Path**: table with `Step | Actor | Action` columns. Leave Step blank unless a later Alternate/Exception path references it by number. Last row is always `| | | END OF USE CASE |`. Rows are never collapsed: don't combine two actor/action pairs into one row, and don't repeat the same actor performing the same action across consecutive rows. If the same actor takes two actions in a row, the second must be a distinct action, typically one that could plausibly pivot to its own alternate or exception path (e.g. "System presents X" then "System validates X" are distinct and branchable; "System presents X" twice in a row is not).
-6. **Alternate Paths**: bullets, each with a numbered list of diverging steps ending in
+5. **Basic Path**: table with `Step | Actor | Action` columns. Number every row sequentially (1., 2., 3., ...), including consecutive rows by the same actor and every decision or check. Only the final row has a blank Step. Last row is always `| | | END OF USE CASE |`. Rows are never collapsed: don't combine two actor/action pairs into one row, and don't repeat the same actor performing the same action across consecutive rows. If the same actor takes two actions in a row, the second must be a distinct action, typically one that could plausibly pivot to its own alternate or exception path (e.g. "System presents X" then "System validates X" are distinct and branchable; "System presents X" twice in a row is not).
+6. **Alternate Paths**: bullets, each labeled `Alternate Path A<N> (from Basic Path #<N>)` where N is the branch step, with steps labeled `A<N>.1`, `A<N>.2`, ... (`A<N>.1` is the alternate version of step N). Add a letter (`A<N>a`, `A<N>b`) when two paths branch from the same step. Each step starts with the acting Actor's exact name in bold with a colon, and other Actors named in the step are bold too (`- A12.1 **Client System:** Receives webhook from **Service**`). The steps end in
    either "Use case continues at Basic Path #N." (the path rejoins) or "End of use case."
    (the path is itself a terminal exit, see `references/format.md`'s "Client Update on
    First Launch" worked example).
-7. **Exception Paths**: same pattern, for error/failure branches, with the same choice of
+7. **Exception Paths**: same pattern with an `E` prefix (`Exception Path E<N>`, steps `E<N>.1`, ...), for error/failure branches, with the same choice of
    ending (rejoin or terminal exit). If a failure mode is known but not yet worked out,
    write `TBD` under it rather than skipping it or guessing.
 8. **Post-Condition(s)**: bullets for what's verifiably true once the use case ends, whether it ends at the Basic Path's END OF USE CASE or at a terminal Alternate/Exception Path. These exist so a test case can be written directly from them: phrase each as a checkable state (a specific record, field, or system value and what it changed to), not a narrative recap of the flow. Cover each terminal exit point separately if there's more than one. Always include this section; write "None." if the use case changes nothing.
@@ -62,10 +62,10 @@ Use `[BRACKET_PLACEHOLDER]` for values that vary by partner/integration/environm
 ### Step 3: Self-check before presenting
 
 Before showing the draft to the user, verify:
-- Actors and the Basic Path stay in sync: each listed Actor is used at least once in the Basic Path, and each Actor named in the Basic Path is listed in Actors.
+- Actors and the paths stay in sync: each listed Actor takes at least one action in the Basic, Alternate, or Exception Paths of this use case, and each Actor named in any of those paths is listed in Actors. Remove any listed Actor that never acts in this use case.
 - The Basic Path ends with the literal `| | | END OF USE CASE |` row.
-- Alternate/Exception Paths each reference a step number that exists in the Basic Path and end with "Use case continues at Basic Path #N." or "End of use case." (if the path is a genuine terminal exit rather than a rejoin). Exception Paths may use `TBD` for a failure mode not yet worked out, per `references/format.md`; Alternate Paths, being known valid variations, shouldn't need it.
-- Basic Path rows each have a unique step number, and no two consecutive rows are the same actor doing the same, non-branchable action. Merge or re-word any that collide.
+- Alternate/Exception Paths each reference a step number that exists in the Basic Path, use the `A<N>`/`E<N>` label matching that step, label every step `A<N>.k`/`E<N>.k` in order, start each step with the bold Actor name and colon (bolding any other Actor named in it), and end with "Use case continues at Basic Path #N." or "End of use case." (if the path is a genuine terminal exit rather than a rejoin). Exception Paths may use `TBD` for a failure mode not yet worked out, per `references/format.md`; Alternate Paths, being known valid variations, shouldn't need it.
+- Every Basic Path row except END OF USE CASE has a step number, numbers run sequentially with no gaps or blanks (including runs of the same actor), and no two consecutive rows are the same actor doing the same, non-branchable action. Merge or re-word any that collide.
 - Section order matches the spec exactly; no extra sections were invented (e.g. no "Preconditions" instead of "Assumptions," no "Actors/Roles" instead of "Actors").
 - Post-Condition(s) is present even when the answer is "None."
 - Actor names match ones already used elsewhere in the same document, if applicable.

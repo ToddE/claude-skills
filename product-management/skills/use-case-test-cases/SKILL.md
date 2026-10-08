@@ -42,7 +42,7 @@ For each path, produce a table row (or block, see format spec) with:
 
 - **Test Case ID**: `TC-<UseCaseShortName>-<NN>`, zero-padded, in the order from Step 2.
 - **Title**: short description of the scenario, e.g. "Successful commissioning scan" or "Chef does not confirm scan."
-- **Covers**: which path this test case verifies (`Basic Path`, `Alternate Path A`, `Exception Path B`, etc.), matching the use case's own labels.
+- **Covers**: which path this test case verifies (`Basic Path`, `Alternate Path A6`, `Exception Path E3`, etc.), matching the use case's own labels.
 - **Preconditions**: pulled from the use case's Assumptions, plus any state specific to this path (e.g. for an Exception Path test, the precondition that triggers the exception).
 - **Steps**: numbered, derived from the path's actor/action rows. Collapse System-only steps the tester doesn't act on, but keep every step where a human actor (or an external system standing in for one, e.g. a mocked platform) takes or receives an action.
 - **Expected Result**: copied from the use case's matching Post-Condition(s) bullet(s). If the use case gave separate post-conditions per exit point, use the one for this path's exit. If a path rejoins the Basic Path rather than terminating, the expected result is whatever state that path leaves behind at the point of rejoin, not the eventual Basic Path outcome, unless the test case is written to run the whole rejoined flow to completion.
