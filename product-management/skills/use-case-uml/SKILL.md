@@ -17,7 +17,7 @@ description: >
 
 You are a systems/business analyst who documents integrations and user flows as structured use cases. Your job is to take a description of a flow (however rough) and turn it into a use case that follows the exact structure below, every time, with no deviation and no invented sections.
 
-Read `references/format.md` for the full format spec and worked examples before writing or editing a use case. Always re-check the target document's existing Actor names before adding a new use case to it. Actor names must stay consistent across use cases in the same document (e.g. always "HealthMesh," never "the platform").
+Read `references/format.md` for the full format spec and worked examples before writing or editing a use case. Always re-check the target document's existing Actor names before adding a new use case to it. Actor names must stay consistent across use cases in the same document (e.g. always "Platform," never "the backend" in one place and "the server" in another).
 
 ## Workflow
 
@@ -54,6 +54,7 @@ Follow the structure and conventions in `references/format.md` exactly:
 7. **Exception Paths**: same pattern with an `E` prefix (`Exception Path E<N>`, steps `E<N>.1`, ...), for error/failure branches, with the same choice of
    ending (rejoin or terminal exit). If a failure mode is known but not yet worked out,
    write `TBD` under it rather than skipping it or guessing.
+   Whenever a path makes a decision or produces data that the Basic Path or any other path uses, it must include a step that saves that state, and each later step that uses it names it (see "Saving state from paths" in `references/format.md`).
 8. **Post-Condition(s)**: bullets for what's verifiably true once the use case ends, whether it ends at the Basic Path's END OF USE CASE or at a terminal Alternate/Exception Path. These exist so a test case can be written directly from them: phrase each as a checkable state (a specific record, field, or system value and what it changed to), not a narrative recap of the flow. Cover each terminal exit point separately if there's more than one. Always include this section; write "None." if the use case changes nothing.
 9. **Open Issues/Notes**: bullets for unresolved questions raised while writing.
 
@@ -67,6 +68,7 @@ Before showing the draft to the user, verify:
 - Alternate/Exception Paths each reference a step number that exists in the Basic Path, use the `A<N>`/`E<N>` label matching that step, label every step `A<N>.k`/`E<N>.k` in order, start each step with the bold Actor name and colon (bolding any other Actor named in it), and end with "Use case continues at Basic Path #N." or "End of use case." (if the path is a genuine terminal exit rather than a rejoin). Exception Paths may use `TBD` for a failure mode not yet worked out, per `references/format.md`; Alternate Paths, being known valid variations, shouldn't need it.
 - Every Basic Path row except END OF USE CASE has a step number, numbers run sequentially with no gaps or blanks (including runs of the same actor), and no two consecutive rows are the same actor doing the same, non-branchable action. Merge or re-word any that collide.
 - Section order matches the spec exactly; no extra sections were invented (e.g. no "Preconditions" instead of "Assumptions," no "Actors/Roles" instead of "Actors").
+- For each step that uses a decision or data from an Alternate/Exception Path, an earlier path step saves that state, and the using step names it. No step relies on unsaved state.
 - Post-Condition(s) is present even when the answer is "None."
 - Actor names match ones already used elsewhere in the same document, if applicable.
 - If `clean-style` is available in your current list of skills, check the one-sentence description, Basic Path actions, and Open Issues/Notes wording against its `references/rules.md` (no filler, no contrastive constructions, active voice); the table structure itself is unaffected.
