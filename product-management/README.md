@@ -1,8 +1,8 @@
 # Product Management Pipeline (Claude Code plugin)
 
-Six skills covering an initiative's lifecycle end to end: from a rough idea, through a
+Seven skills covering an initiative's lifecycle end to end: from a rough idea, through a
 Working Backwards PR/FAQ, broken into use cases, written up in full, turned into test cases
-and trackable requirements, and finally into a persona-driven architecture recommendation.
+and trackable requirements, into a persona-driven architecture recommendation, and finally into an implementation plan that [claude-build](https://github.com/ToddE/claude-build) can run.
 They're bundled as one plugin because they hand off to each other; installing one without
 the others still works, but the value is in the chain.
 
@@ -68,7 +68,7 @@ how these skills trigger or run once installed.
 **Per-skill installs** (skip the plugin, install just one): each skill is also packaged as
 its own `.skill` file and a plain folder, exactly like Clean Style. See the root README's
 "How to Use These Skills" for Options 0-4 (fetch-once, plugin, `.skill` file, folder-drop,
-or rule). The folder path for these six is `product-management/skills/<skill-name>/`, not
+or rule). The folder path for these seven is `product-management/skills/<skill-name>/`, not
 the repo root.
 
 ## The pipeline
@@ -87,6 +87,9 @@ Test Cases   Requirements  (CSV / GitHub Issues)
         |
         v
 Architect Review  (persona recommendation, optional debate between two)
+        |
+        v
+Build Plan  (milestones, task table with model and effort, for claude-build)
 ```
 
 Each stage works standalone; none of them require you to have run the one before. A skill
@@ -215,6 +218,27 @@ Gives a structured architectural recommendation from a specific Sr. Architect pe
 - "Give me an architecture review of this"
 - "What would the Pragmatic Modulith Architect say about this approach"
 - "Have the Pragmatic Modulith Architect and the Assembler debate this one"
+
+### Build Plan
+
+[Download (.skill)](https://github.com/ToddE/claude-skills/releases/latest/download/build-plan.skill)
+
+Turns the pipeline's output into an implementation plan that [claude-build](https://github.com/ToddE/claude-build) can run unattended. It plans from whatever exists (use cases, requirements, test cases, an architecture review, a PR/FAQ, or a description) and asks only about what is missing: the stack, the check commands, the protected areas, the credentials, and the gates. It does not write code, and it does not start the build.
+
+**Triggers when you mention:** an implementation plan, a build plan, an engineering prompt, "break this into tasks," "plan the build," or setting up claude-build.
+
+**What it does:**
+- Orders milestones by dependency and risk: tooling, a risk spike with a gate, a thin end-to-end path, features, then hardening
+- Breaks each milestone into tasks that a fresh session can finish and verify, each with a pointer to the requirement and a check that proves it is done
+- Assigns a model and an effort level to every task, groups same-model tasks together, and adds gate rows where a person should look
+- Checks that every Must requirement and every use case maps to a task, and shows you the coverage list
+- Lists unresolved questions under "Open questions" and sets the build to blocked, the same way claude-build's own `--init` does
+- Writes the files claude-build reads: `BUILD_STATE.md`, `CLAUDE.md`, and `claude-build.conf` (every setting, with allowed commands taken from your check commands), plus a dated build plan and engineering prompt
+
+**Example prompts:**
+- "Turn these requirements into a build plan for claude-build"
+- "Break this into tasks and pick a model for each"
+- "Write the engineering prompt and BUILD_STATE.md for this project"
 
 ## See it run end to end
 
