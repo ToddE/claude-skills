@@ -38,7 +38,7 @@ Break the initiative into discrete use cases: each one should be a single flow w
 For each candidate, capture only:
 - **Name**: matches the `Use Case: <Short Name>` title convention use-case-uml uses.
 - **Summary**: one sentence, same shape as use-case-uml's one-sentence description.
-- **Rough Actors**: the 2-4 actors most likely involved. Not final, just enough to sanity check overlap and consistency across the list.
+- **Rough Actors**: the actors most likely involved, usually 2-6 (see `references/format.md`). Not final, just enough to sanity check overlap and consistency across the list.
 - **Rough Trigger**: what starts the flow, if external. Leave blank if it's clearly a continuation from another candidate use case.
 
 Present the full candidate list as a table (see `references/format.md`) before writing any use case in full. Group candidates loosely if a natural sequence emerges (setup, then primary use, then error or support flows); this becomes useful ordering when handing off to use-case-uml.
@@ -56,7 +56,7 @@ If `clean-style` is available in your current list of skills, check each candida
 
 ### Step 4: Hand off to use-case-uml
 
-Once confirmed, offer to draft the full use cases with the use-case-uml skill: either one at a time (recommended when actor or flow details still need discussion) or as a batch if the user wants them all drafted from the candidate summaries directly. Check whether use-case-uml is available in your current list of skills before offering it as if it's ready to use. If it isn't, tell the user it's part of this repo (github.com/ToddE/claude-skills) and point them to installing it rather than assuming it's already there. When handing off, carry forward the confirmed Name, Summary, and Actor list so use-case-uml doesn't have to re-derive them from scratch. Its own Step 1 interview can then focus on filling in the Basic Path, Alternate/Exception Paths, and Post-Condition(s) rather than re-scoping.
+Once confirmed, offer to draft the full use cases with the use-case-uml skill: either one at a time (recommended when actor or flow details still need discussion) or as a batch if the user wants them all drafted from the candidate summaries directly. Check whether use-case-uml is available in your current list of skills before offering it as if it's ready to use. If it isn't, tell the user it's part of this repo (github.com/ToddE/claude-skills) and point them to installing it rather than assuming it's already there. When handing off, carry forward the confirmed Name, Summary, and Actor list (use-case-uml trims it to the actors that act in that use case's paths) so use-case-uml doesn't have to re-derive them from scratch. Its own Step 1 interview can then focus on filling in the Basic Path, Alternate/Exception Paths, and Post-Condition(s) rather than re-scoping.
 
 ## Format Reference
 

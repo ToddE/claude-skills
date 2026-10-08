@@ -58,8 +58,3 @@ behind generating a new one.
   (separate, cross-linked files) if that run gets revisited.
 - Even in runs with multiple use cases, downstream artifacts don't always cover every one
   from the start. Worth checking coverage explicitly when reviewing a new run.
-- Possible use-case-uml spec gap: its self-check requires every listed Actor to appear in
-  the Basic Path specifically. An actor that only appears in an Exception Path (e.g. an
-  escalation contact, reached only on failure) is a normal pattern but currently fails that
-  check. Worth deciding whether the rule should allow an Actor to be used anywhere in the
-  document, not just the Basic Path, before this comes up again.
