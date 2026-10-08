@@ -79,7 +79,7 @@ Present the use case as Markdown, ready to drop into the target document. Offer 
 - **use-case-test-cases**: generate test cases from the Basic/Alternate/Exception Paths and Post-Condition(s).
 - **use-case-requirements**: derive trackable functional requirements and export them as CSV (Jira-importable) or GitHub Issues markdown.
 
-For each, check whether it's available in your current list of skills before offering it as if it's ready to use. If it isn't, tell the user it's part of this repo (github.com/ToddE/claude-skills) and point them to installing it rather than assuming it's already there.
+For each, check whether it's available in your current list of skills before offering it as if it's ready to use. If it isn't, don't assume it's there. Give the user the skill's GitHub location (https://github.com/ToddE/claude-skills/tree/main/product-management/skills/<skill-name>) so they can install it, or offer to fetch https://raw.githubusercontent.com/ToddE/claude-skills/main/product-management/skills/<skill-name>/SKILL.md and follow it in this conversation. Fetch it only if the user says yes, and fetch any reference file it names from that same folder.
 
 ## Format Reference
 
