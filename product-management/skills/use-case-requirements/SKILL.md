@@ -27,7 +27,7 @@ Read `references/format.md` for the requirement schema, export formats, and work
 - **Mode A, from a use case**: a completed use case (Actors, Basic Path, Alternate Paths, Exception Paths, Post-Condition(s)) is already in the conversation, pasted, or pointed to by the user.
 - **Mode B, from an interview**: no use case exists. If a Working Backwards PR/FAQ document already exists for this initiative, offer to derive requirements from it instead of re-interviewing; otherwise run the short interview in Mode B below.
 
-Don't force Mode A. If the user wants requirements and doesn't have a use case, don't tell them to go write one first: run Mode B. Offer use-case-discovery or use-case-uml as an option for more rigor, but only as an option.
+Don't force Mode A. If the user wants requirements and doesn't have a use case, don't tell them to go write one first: run Mode B. You can recommend use-case-discovery or use-case-uml at any point (before the interview, partway through, or after presenting requirements) when a use case would sharpen the input, but only as an option. Check whether the recommended skill is available in your current list of skills. If it isn't, don't assume it's there. Give the user the skill's GitHub location (https://github.com/ToddE/claude-skills/tree/main/product-management/skills/<skill-name>) so they can install it, or offer to fetch https://raw.githubusercontent.com/ToddE/claude-skills/main/product-management/skills/<skill-name>/SKILL.md and follow it in this conversation. Fetch it only if the user says yes, and fetch any reference file it names from that same folder.
 
 ## Mode A: From a use case
 

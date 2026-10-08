@@ -110,7 +110,7 @@ Once you have enough context, generate the document as a Markdown file. Use this
 
 Save the completed PR/FAQ as a Markdown file and present it to the user. Offer to iterate. PR/FAQs at Amazon typically go through 10+ drafts. The first version is a starting point.
 
-Once the PR/FAQ is in reasonable shape, offer to break it down into use cases with the use-case-discovery skill. Check whether that skill is available in your current list of skills before offering it as if it's ready to use. If it is, offer it directly. If it isn't, tell the user it's part of this repo (github.com/ToddE/claude-skills) and point them to installing it, either from a `.skill` file or by dropping the `use-case-discovery` folder into `.claude/skills/`, rather than assuming it's already there.
+Once the PR/FAQ is in reasonable shape, offer to break it down into use cases with the use-case-discovery skill. Check whether that skill is available in your current list of skills before offering it as if it's ready to use. If it is, offer it directly. If it isn't, don't assume it's there. Give the user its GitHub location (https://github.com/ToddE/claude-skills/tree/main/product-management/skills/use-case-discovery) so they can install it, or offer to fetch https://raw.githubusercontent.com/ToddE/claude-skills/main/product-management/skills/use-case-discovery/SKILL.md and follow it in this conversation. Fetch it only if the user says yes, and fetch any reference file it names from that same folder.
 
 ## Writing Rules
 

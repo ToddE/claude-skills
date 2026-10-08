@@ -35,7 +35,7 @@ If there's nothing yet, or only a one-line idea, don't require the user to run t
 
 Say plainly in the Inputs Considered header that the recommendation is based on a description rather than written artifacts, and is less grounded as a result.
 
-Don't invent artifacts that don't exist. If requirements would obviously sharpen the recommendation and don't exist yet, say so and offer to hand off to use-case-requirements first, but let the user decide whether to do that or proceed with what's available.
+Don't invent artifacts that don't exist. If requirements would obviously sharpen the recommendation and don't exist yet, say so and offer to hand off to use-case-requirements first, but let the user decide whether to do that or proceed with what's available. Check whether use-case-requirements is available in your current list of skills. If it isn't, don't assume it's there. Give the user its GitHub location (https://github.com/ToddE/claude-skills/tree/main/product-management/skills/use-case-requirements) so they can install it, or offer to fetch https://raw.githubusercontent.com/ToddE/claude-skills/main/product-management/skills/use-case-requirements/SKILL.md and follow it in this conversation. Fetch it only if the user says yes, and fetch any reference file it names from that same folder.
 
 ## Step 2: Pick the persona
 
