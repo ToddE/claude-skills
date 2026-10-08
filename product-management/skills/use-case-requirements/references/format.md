@@ -35,11 +35,16 @@ requirements instead.
 Columns, in this order, one row per requirement:
 
 ```
-Summary,Description,Issue Type,Priority,Labels,Epic Link,Acceptance Criteria,Source
+Requirement ID,Summary,Description,Component,Issue Type,Priority,Labels,Epic Link,Acceptance Criteria,Source
 ```
 
+- **Requirement ID** = the Requirement ID field (e.g. `REQ-ClientUpdate-01`), always the
+  first column. Most trackers have no matching column, so map it to a custom field on
+  import, or it stays in the file as the stable key back to this list.
 - **Summary** = the Requirement statement.
 - **Description** = the Detail field.
+- **Component** = the Component field (the owning actor/system). Maps to Jira's standard
+  Components field on import.
 - **Issue Type** = "Story" unless the user specifies otherwise.
 - **Priority** = the Priority field, as given by the user.
 - **Labels** = the use case's short name (e.g. `ClientUpdate`), so all requirements from one
@@ -58,6 +63,10 @@ One block per requirement:
 
 ```
 ### <Requirement statement>
+
+**Requirement ID:** <Requirement ID>
+
+**Component:** <Component>
 
 **Labels:** <use-case-short-name>, <priority-if-set>
 
@@ -103,19 +112,23 @@ would test in parts, so they merge into one requirement instead of four.
 ### CSV export
 
 ```csv
-Summary,Description,Issue Type,Priority,Labels,Epic Link,Acceptance Criteria,Source
-"Client Application shall request bundle/version info from Platform on every launch.","Basic Path steps 2-3: Client Application shows the loading screen while it asks Platform for bundles.",Story,Must,ClientUpdate,,"Platform receives exactly one bundle request per launch.","Basic Path #2-3"
-"Platform shall indicate to Client Application whether an update is required and, if so, supply an Upgrade prompt.","Basic Path step 4: Platform's bundle response includes an update-required flag and Upgrade button content when applicable.",Story,Must,ClientUpdate,,"Client Application's bundle response includes the update-required flag matching Platform's actual latest version.","Basic Path #4"
-"Client Application shall display Platform's required-update page to the Subscriber, including a working Upgrade link.","Basic Path step 5.",Story,Must,ClientUpdate,,"The Subscriber sees the bundled page with a functioning Upgrade link when Platform's response flagged a required update.","Basic Path #5"
-"Client Application shall let the subscriber decline an update without blocking future retries.","Exiting without clicking the upgrade link must not persist a ""declined"" state.",Story,Should,ClientUpdate,,"Client Application's installed version is unchanged after decline; use case re-enters at Basic Path #1 on re-launch.","Alternate Path A6"
-"Client Application shall complete the platform-guided install handoff when the Subscriber clicks the upgrade link.","Basic Path steps 6-10: follows the link to Platform, launches the Device Browser to the URL Platform provides, and the browser starts the install.",Story,Must,ClientUpdate,,"Clicking the upgrade link results in the Device Browser starting the update install, matching the version Platform most recently delivered.","Basic Path #6-10, Post-Condition (Basic Path exit)"
-"Client Application shall degrade gracefully when Platform is unreachable.","Show a friendly error message with a fallback link to the content site rather than failing silently.",Story,Must,ClientUpdate,,"Client Application's installed version is unchanged; subscriber's device browser has loaded the [PARTNER_NAME] content site home page.","Exception Path E3, Post-Condition (Exception Path E3 exit)"
+Requirement ID,Summary,Description,Component,Issue Type,Priority,Labels,Epic Link,Acceptance Criteria,Source
+"REQ-ClientUpdate-01","Client Application shall request bundle/version info from Platform on every launch.","Basic Path steps 2-3: Client Application shows the loading screen while it asks Platform for bundles.","Client Application",Story,Must,ClientUpdate,,"Platform receives exactly one bundle request per launch.","Basic Path #2-3"
+"REQ-ClientUpdate-02","Platform shall indicate to Client Application whether an update is required and, if so, supply an Upgrade prompt.","Basic Path step 4: Platform's bundle response includes an update-required flag and Upgrade button content when applicable.","Platform",Story,Must,ClientUpdate,,"Client Application's bundle response includes the update-required flag matching Platform's actual latest version.","Basic Path #4"
+"REQ-ClientUpdate-03","Client Application shall display Platform's required-update page to the Subscriber, including a working Upgrade link.","Basic Path step 5.","Client Application",Story,Must,ClientUpdate,,"The Subscriber sees the bundled page with a functioning Upgrade link when Platform's response flagged a required update.","Basic Path #5"
+"REQ-ClientUpdate-04","Client Application shall let the subscriber decline an update without blocking future retries.","Exiting without clicking the upgrade link must not persist a ""declined"" state.","Client Application",Story,Should,ClientUpdate,,"Client Application's installed version is unchanged after decline; use case re-enters at Basic Path #1 on re-launch.","Alternate Path A6"
+"REQ-ClientUpdate-05","Client Application shall complete the platform-guided install handoff when the Subscriber clicks the upgrade link.","Basic Path steps 6-10: follows the link to Platform, launches the Device Browser to the URL Platform provides, and the browser starts the install.","Client Application",Story,Must,ClientUpdate,,"Clicking the upgrade link results in the Device Browser starting the update install, matching the version Platform most recently delivered.","Basic Path #6-10, Post-Condition (Basic Path exit)"
+"REQ-ClientUpdate-06","Client Application shall degrade gracefully when Platform is unreachable.","Show a friendly error message with a fallback link to the content site rather than failing silently.","Client Application",Story,Must,ClientUpdate,,"Client Application's installed version is unchanged; subscriber's device browser has loaded the [PARTNER_NAME] content site home page.","Exception Path E3, Post-Condition (Exception Path E3 exit)"
 ```
 
 ### GitHub Issues markdown (one requirement shown)
 
 ```
 ### Platform shall indicate to Client Application whether an update is required and, if so, supply an Upgrade prompt.
+
+**Requirement ID:** REQ-ClientUpdate-02
+
+**Component:** Platform
 
 **Labels:** ClientUpdate, Must
 
