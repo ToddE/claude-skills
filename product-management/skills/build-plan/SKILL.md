@@ -36,10 +36,11 @@ Collect, from the conversation or the project folder: use cases, functional requ
 Then check for what the plan cannot be made without. Ask one question at a time, skipping anything already answered:
 
 1. **Stack and structure.** Language, framework, package manager, where code lives. If an architecture review exists, take it from there instead of asking.
-2. **Checks.** The exact commands that prove a task is done: lint, types, unit tests, end-to-end tests, and any project-specific checks. A task with no command that verifies it is a weak task.
+2. **Checks.** The exact commands that prove a task is done: lint, types, unit tests, end-to-end tests, and any project-specific checks. Each one exits 0 when the project is healthy. A task with no command that verifies it is a weak task.
 3. **Protected areas.** Where a silent mistake would be harmful: authentication, encryption, personal or financial data, payments, deletion, permissions. These get the strongest model and a review.
 4. **Credentials and external steps.** Accounts, keys, DNS, or approvals the builder cannot create. Each becomes a stop condition with a mock to continue on.
-5. **Gates.** Where a person must look before the build continues. Default to one after any risky spike and one at each milestone that changes who can use the product.
+5. **Gates.** Where a person must look. Default to one after any risky spike and one at each milestone that changes who can use the product. For each, ask whether later work depends on the answer (see Step 4).
+6. **Review mode.** Does the user want to review at each milestone (`GATE_MODE="stop"`), or let the build run to the end with automated checks and one report (`GATE_MODE="continue"`)? Recommend `continue` only when the check commands from question 2 exist and every gate has a test task before it (Step 3). claude-build does not run the checks itself at a gate, so the test tasks are what make `continue` safe. Gates marked `GATE!` stop the build in both modes.
 
 If none of the upstream artifacts exist, say so and recommend them as an option, not a requirement. Check whether the recommended skill is available in your current list of skills. If it isn't, give the user its GitHub location (https://github.com/ToddE/claude-skills/tree/main/product-management/skills/<skill-name>) or offer to fetch https://raw.githubusercontent.com/ToddE/claude-skills/main/product-management/skills/<skill-name>/SKILL.md and follow it in this conversation. Fetch it only if the user says yes. If the user wants to proceed anyway, plan from a short description. Record each assumption as an open question (see Step 5).
 
@@ -47,13 +48,13 @@ If none of the upstream artifacts exist, say so and recommend them as an option,
 
 Order milestones by dependency and risk, not by feature list:
 
-1. **M0, tooling.** Repository, config, the check commands, and the shared helpers everything else imports. The checks must run before any feature exists.
+1. **M0, tooling.** Repository, config, the test runner, the check commands, and the shared helpers everything else imports. Every check command must exit 0 on the empty project before any feature exists.
 2. **A risk spike, if one exists.** The riskiest unknown (a library limit, a file format, a platform constraint) gets its own early milestone with a gate, so a wrong assumption costs a day and not a month.
 3. **A thin working path.** The smallest end-to-end flow that touches every layer (sign-in to one saved record, for example) before any breadth.
 4. **Feature milestones.** Group use cases that share data or screens. Each names the use cases it covers.
 5. **Hardening and launch.** Security review, accessibility, performance, backups, runbook.
 
-Each milestone states what it builds, which use cases it covers, and a "Done when" line made of checks that a command can run. A milestone that ends with a gate says what the person should look at.
+Each milestone states what it builds, which use cases it covers, and a "Done when" line made of checks that a command can run. Each milestone after M0 ends with a task that writes its automated tests, then a gate that says what the person should look at.
 
 ## Step 3: Break milestones into tasks
 
@@ -63,6 +64,8 @@ One task is one commit that a fresh session can finish and verify. Apply these t
 - **Pointer.** The Task cell names where the detail lives: a requirement id, a section heading, a file path. The builder reads that part, not the whole planning folder.
 - **Check.** The Task cell ends with how to tell it is done: a command that passes, a test id, a file that exists. Test cases from use-case-test-cases become tasks that write the automated test with the same id.
 - **Order.** A task depends only on rows above it. Shared helpers come before the code that uses them.
+- **Tests.** The last task of each milestone writes or extends the automated tests for that milestone from its test cases, and cites the TC ids. It sits directly before the milestone's gate row, and its check is the command that runs those tests. A feature task can add a quick test for its own code, but this task is where the test cases become tests.
+- **Cells.** A literal `|` inside a table cell is written `\|`, because claude-build splits rows on `|`. Every row has exactly eight cells.
 - **Traceability.** Every Must requirement appears in at least one task. Every use case appears in a milestone. List anything that does not, and resolve it before presenting.
 
 Put the requirement ids in the Task cell (for example `REQ-ClientUpdate-02`) so the builder can cite them in code comments and commit messages, and so a script can check coverage.
@@ -82,7 +85,12 @@ Effort follows the same logic: `low` for scripted work verified by one command, 
 
 Then arrange the table so tasks that name the same model sit together wherever dependencies allow, because claude-build starts a new run each time the model changes.
 
-Add a task row with `GATE` at the start of its Task cell after each milestone that needs a human look, and after any task on a protected path where the user asked for a stop. A gate row has no Model.
+There are two kinds of review point. Both are rows with no Model, placed directly after the milestone's test task:
+
+- **`GATE`** is a review point. With `GATE_MODE="stop"` the build pauses. With `GATE_MODE="continue"` it records the point, keeps going, and lists it in the final report.
+- **`GATE!`** always stops, in both modes. Use it for a decision that later work depends on: a risk spike result, a design choice, credentials, or a protected area where the user asked for a stop.
+
+Write each gate's Task cell for a person who has not read the plan. It says what was built, the path of each file to open (from the project root), what a correct result looks like, and what to do if it is wrong. The run turns this into the row's Notes and its final message.
 
 ## Step 5: Write the files
 
@@ -92,7 +100,7 @@ Use the formats in `references/format.md`. Write these, with the names shown:
 | --- | --- | --- |
 | `BUILD_STATE.md` | claude-build (script) | Status header and the task table |
 | `CLAUDE.md` | Claude Code at every session start | Short project rules, stop conditions, model rules, token discipline |
-| `claude-build.conf` | claude-build (script) | Project path, prompt, model and effort defaults, allowed commands |
+| `claude-build.conf` | claude-build (script) | Project path, model and effort defaults, allowed commands, review mode |
 | `build-plan-<timestamp>.md` | The builder, on demand | Tools and structure, milestones, checks, test approach, traceability |
 | `engineering-prompt-<timestamp>.md` | The builder, first | Reading order for the planning files and the first action |
 
@@ -107,17 +115,20 @@ The config is where the plan meets the tool, so derive each setting from what yo
 | `PROJECT_NAME`, `PROJECT_DIR` | The project name. Ask for the absolute path if you do not know it. It must be absolute |
 | `STATE_FILE` | `BUILD_STATE.md`, unless the user keeps it elsewhere |
 | `CONTEXT_FILES` | The engineering prompt only. The prompt points to the rest, so each run reads what its task needs |
-| `PROMPT` | claude-build's default prompt, unchanged unless the project needs different gate or stop wording. It does not name CLAUDE.md, which Claude Code loads on its own |
+| `PROMPT`, `PROMPT_FILE` | Leave both out. claude-build's built-in prompt applies, and it adds rules about gates, stop requests, and leftover files that a copied prompt would miss or let go stale |
 | `MODEL`, `MODEL_FROM_STATE` | `MODEL` is the model of most tasks (usually `sonnet`). `MODEL_FROM_STATE=1` so the Model column decides |
 | `EFFORT_FROM_STATE`, `EFFORT_DEFAULTS` | `1`, and the defaults from Step 4 |
-| `ALLOWED_TOOLS` | Read, Edit, Write, Glob, Grep, plus a `Bash(...)` entry for each check command from Step 1 and for local dev tools. Include `ls`, `cat`, and `mkdir`, and the `git add`, `git commit`, `git status`, `git diff`, and `git log` entries. Never add push, deploy, publish, or delete commands. Add `Agent` only if the plan uses helper agents |
-| `TASKS_PER_RUN` | 5 by default. Lower (2 or 3) when the tasks are large or on protected paths. Higher (8) for small mechanical rows |
+| `ALLOWED_TOOLS` | Read, Edit, Write, Glob, Grep, plus a `Bash(...)` entry for every check command from Step 1 and for local dev tools. Include `ls`, `cat`, and `mkdir`, and the `git add`, `git commit`, `git status`, `git diff`, and `git log` entries. Never add push, deploy, publish, or delete commands. Leave `Agent` out unless the plan needs helper agents, because a session that hands work to a background helper can lose it |
+| `GATE_MODE` | The answer to the review-mode question in Step 1: `stop` or `continue`. Default `stop` |
+| `TASKS_PER_RUN` | 5 by default. 2 or 3 for large tasks or protected areas, so work is committed often. Higher (8) for small mechanical rows |
 | `TIMEOUT` | `3h` by default. Raise it only if a single task, such as a long test run, needs it |
 | `REDACT_FILES` | Every file that holds secrets (`.env.local`, `.dev.vars`) |
 | `CLAUDE_BIN` | Leave as `claude`. Ask only if the user plans to run from cron |
-| `INTERVAL`, `AFTER_RUN`, `BACKOFF_STEPS` | Leave at the defaults |
+| `INTERVAL`, `AFTER_RUN`, `BACKOFF_STEPS`, `WATCH_EVERY` | Leave at the defaults |
+| `REPORT`, `REPORT_MODEL`, `REPORT_EFFORT` | Leave at the defaults (`1`, `sonnet`, `low`). Set `REPORT=0` only if the user wants no report call |
+| `SNAPSHOT_EVERY`, `SNAPSHOT_KEEP`, `STREAM`, `BG_WAIT_CEILING_MS` | Leave at the defaults. Remind the user to keep build output in `.gitignore`, because snapshots save new files that are not ignored |
 
-Add a comment above any value that differs from the default saying why. Tell the user the file is read as shell, must be owned by them and not writable by everyone, and that they should run `claude-build -c <conf> -d <project>` for a preview (it starts nothing) and read the allowed commands and the prompt before the first `-r` or `-b`.
+Add a comment above any value that differs from the default saying why. Tell the user the file is read as shell, must be owned by them and not writable by everyone, and that they should preview with `claude-build -v` (it starts nothing) and read the allowed commands and the prompt before the first run.
 
 **Open questions.** Do not guess silently. For any unclear point that would change scope, order, or model choice, write the best draft, list the point under `## Open questions` after the task table with the assumption you used, and set `STATUS: blocked` with the reason claude-build uses (`references/format.md`). Ask the user first if they are available; leave `STATUS: ready` when there are none.
 
@@ -131,23 +142,30 @@ Before writing, tell the user the format (Markdown, plus one shell-format config
 - Every Id is unique, every Status is `todo`, and NEXT names the first row.
 - Every Model is `sonnet`, `opus`, or `haiku` (or empty on a gate row). Every Effort is empty or one of `low`, `medium`, `high`, `xhigh`, `max`.
 - Every Task cell has a pointer and a check, or is a gate.
+- No unescaped `|` in any cell: every row has the same number of cells as the header.
+- Every `GATE` and `GATE!` row has a test task directly before it, and every milestone after M0 has one.
+- Every decision that later work depends on (a spike result, a design choice, credentials, a protected area) uses `GATE!`. Gate Tasks name the files to open, the correct result, and the fix if it is wrong.
+- If `GATE_MODE` is `continue`, the check commands exist and each is allowed in `ALLOWED_TOOLS`.
 - Every Must requirement and every use case is covered, and the coverage list is shown to the user.
 - Protected areas are all assigned to Opus and listed in `CLAUDE.md`.
-- `claude-build.conf` sets every key in the template, `PROJECT_DIR` is absolute, and `CONTEXT_FILES` names a file that exists. It allows the project's check commands and nothing that deploys, pushes, or deletes.
+- `claude-build.conf` sets every key in the template, `PROJECT_DIR` is absolute, and `CONTEXT_FILES` names a file that exists. It has no `PROMPT`. Every check command has a `Bash(...)` entry in `ALLOWED_TOOLS`, `Agent` is absent unless the plan needs it, and nothing deploys, pushes, or deletes.
 - Each stop condition in `CLAUDE.md` says what the builder does instead of waiting (usually: continue with a mock or a marker).
 - If `clean-style` is available in your current list of skills, check the prose in the build plan and `CLAUDE.md` against its `references/rules.md` before presenting.
 
 ## Hand-off
 
-After the user reviews the table, tell them how to run it, using their project path:
+Run these from the project folder that holds `claude-build.conf`. Give the user this list:
 
 ```
-claude-build -d <project> -c <project>/claude-build.conf          preview, starts nothing
-claude-build -d <project> -c <project>/claude-build.conf -s       status
-claude-build -d <project> -c <project>/claude-build.conf -b       run in the background
+curl -fsSL https://raw.githubusercontent.com/ToddE/claude-build/main/install.sh | bash     install
+claude-build -v                       preview: the model, the prompt, the allowed commands. Starts nothing
+claude-build -rv --watch              run in this terminal and watch the dashboard (-b --watch runs it in the background)
+claude-build --ready                  after a stop: read .build/report-latest.md first, then run this to set STATUS: ready
+claude-build -k                       stop the build
+claude-build --guide                  help with setup
 ```
 
-If claude-build is not installed, point them to https://github.com/ToddE/claude-build. If its state-file format has changed from what `references/format.md` describes, follow the current README and `examples/` in that repository and say what differs.
+The user reviews the table before the first run. If claude-build's state-file or config format has changed from what `references/format.md` describes, follow the current README and `examples/` in https://github.com/ToddE/claude-build and say what differs.
 
 ## Format Reference
 

@@ -1,6 +1,6 @@
 # Build Plan Format
 
-These formats match claude-build as documented in its README and script (https://github.com/ToddE/claude-build, checked against main, commit 4369f84, 2026-10-08). Its reference examples are `examples/BUILD_STATE.md`, `examples/PLAN.md`, and `examples/claude-build.conf`. The script reads `BUILD_STATE.md` and `claude-build.conf` without a model, so those two are a contract. The other three files are read by Claude Code sessions and can be adapted.
+These formats match claude-build as documented in its README and script (https://github.com/ToddE/claude-build, checked against v1.2.6, commit 1efe679, 2026-10-09). Its reference examples are `examples/BUILD_STATE.md`, `examples/PLAN.md`, and `examples/claude-build.conf`. The script reads `BUILD_STATE.md` and `claude-build.conf` without a model, so those two are a contract. The other three files are read by Claude Code sessions and can be adapted.
 
 ## BUILD_STATE.md
 
@@ -23,12 +23,13 @@ Rules the script and the sessions rely on:
 - **NEXT** is the Id of the first `todo` row.
 - **Id** is unique. Tasks run in table order from NEXT. Use `<milestone>.<n>` (`0.1`, `3.12`).
 - **Milestone** is a short label (`M0`, `M3 MVP`).
-- **Task** is the instruction. It names where the detail lives and how to check it. A row whose Task starts with `GATE` stops the build for a person.
+- **Task** is the instruction. It names where the detail lives and how to check it. A row whose Task starts with `GATE` is a review point, and one that starts with `GATE!` always stops the build (see Gate rows).
 - **Model** is `sonnet`, `opus`, or `haiku`. Empty on a gate row, or to use `MODEL` from the config.
 - **Effort** is empty (use the model's default), or `low`, `medium`, `high`, `xhigh`, `max`.
 - **Status** is `todo`, `doing`, or `done`. A new plan has only `todo`.
 - **Commit** and **Notes** start empty. Runs fill them. A task that fails twice gets a diagnosis in Notes, Model set to `opus`, Effort set to `high`, and stays `todo`.
 - Never delete a row. A redone task keeps its row with a note.
+- **A literal `|` inside a cell is written `\|`.** claude-build splits rows on `|` and warns when a row has a different number of cells than the header. This applies to commands in the Task cell, for example ``grep -c "a\|b" file``. Every row has the same number of cells as the header.
 
 Optional extra header lines (`MILESTONE:`, `LAST_RUN:`, `LAST_COMMIT:`) are allowed after the first three. Add them only if the project's CLAUDE.md says who updates them.
 
@@ -54,13 +55,27 @@ If the plan cannot be finished without an answer that would change scope, order,
 
 Then set `STATUS: blocked` and `BLOCKED_REASON: Answer the open questions in this file, then set STATUS to ready`. This is the same convention claude-build's own `--init` uses. If there are no open questions, leave `STATUS: ready`.
 
+### Test rows
+
+The last task of each milestone after M0 writes or extends the automated tests for that milestone, from its test cases, and cites the TC ids. It sits directly before the milestone's gate row. M0 sets up the test runner and ends with a task that makes every check command exit 0 on the empty project.
+
+```
+| 1.4 | M1 Thin path | Write the M1 tests from TC-ClientUpdate-01 to TC-ClientUpdate-04 in planning/test-cases.md, each named with its TC id. `pnpm test` passes | sonnet | | todo | | |
+```
+
 ### Gate rows
 
+Two kinds, both with no Model, both directly after the milestone's test row.
+
 ```
-| 1.5 | M1 Spike | GATE. Stop after 1.4. Review spike/report.md: do the timing and memory numbers fit the platform limits? | | | todo | | |
+| 1.5 | M1 Thin path | GATE! Decision for M2: the bundle response shape ... | | | todo | | |
+| 2.5 | M2 Variations | GATE. Review point ... | | | todo | | |
 ```
 
-State in the row what the person should look at and what decision they are making. The run sets the row `done`, sets `STATUS: gate`, and stops. The person sets `STATUS: ready` to continue.
+- **`GATE`** is a review point. With `GATE_MODE="stop"` (the default) the run sets the row `done`, sets `STATUS: gate`, and stops. The person sets `STATUS: ready` to continue (`claude-build --ready` makes the edit). With `GATE_MODE="continue"` the build records the point, keeps going, and lists it in the report at the end.
+- **`GATE!`** always stops, in both modes. Use it for a decision that later work depends on: a risk spike result, a design choice, credentials, or a protected area where a person should look first.
+
+Write the Task cell for a person who has not read the plan. Say what was built, the path of each file to open (from the project root), what a correct result looks like, and what to do if it is wrong. The run turns this into the row's Notes and its final message.
 
 ## CLAUDE.md
 
@@ -75,7 +90,7 @@ Short. It loads in every session. Sections, in order:
 
 ## claude-build.conf
 
-Shell syntax, run by claude-build, so it must be owned by the user and not writable by everyone (`chmod o-w`); claude-build refuses to use it otherwise. Every key claude-build reads is below. Keys left at the default are still written, so the file documents itself. Add a comment above any value that differs from the default.
+Shell syntax, run by claude-build, so it must be owned by the user and not writable by everyone (`chmod o-w`); claude-build refuses to use it otherwise. Every key claude-build reads is below except `PROMPT` and `PROMPT_FILE`. Keys left at the default are still written, so the file documents itself. Add a comment above any value that differs from the default.
 
 ```bash
 # <project> build config. Version YYYY-MM-DD HH:MM.
@@ -86,10 +101,10 @@ PROJECT_DIR="<absolute path to the project>"
 STATE_FILE="BUILD_STATE.md"
 LOG_DIR=".build"
 
-# What each run is told. {state_file}, {context}, {tasks_per_run}, {model_rule} are filled in
-# by claude-build. PROMPT_FILE, if set, wins over PROMPT.
-PROMPT='Read {state_file}. {context} Continue the build at the NEXT task. Do up to {tasks_per_run} tasks, or stop earlier at a gate or a stop condition. {model_rule} After each task, update {state_file} and commit. If a stop condition applies, set STATUS to blocked with the reason and stop. Do not deploy and do not push.'
-PROMPT_FILE=""
+# What each run is told. PROMPT and PROMPT_FILE are left out on purpose: claude-build's built-in
+# prompt applies, and it adds rules about gates, stop requests, and leftover files. A copied
+# prompt goes stale.
+# Files a run starts reading from (relative to PROJECT_DIR). Nothing is loaded in advance.
 CONTEXT_FILES=("planning/engineering-prompt-<timestamp>.md")
 
 # Model and effort. The Model and Effort columns of the state file decide each run.
@@ -114,18 +129,51 @@ EXTRA_CLAUDE_ARGS=()
 CLAUDE_BIN="claude"
 
 # Pacing and failure handling.
+# Tasks per run is an instruction in the prompt. Use 2 or 3 for large tasks or protected areas
+# so work is committed often.
 TASKS_PER_RUN=5
+# Longest one run may take (90s, 45m, 3h). A run stopped this way counts as failed and backs off.
 TIMEOUT="3h"
+# Seconds to wait when there is nothing to do or after a failed run. Waiting uses no tokens.
 INTERVAL=1200
+# Seconds to wait after a good run.
 AFTER_RUN=30
+# Seconds to wait after the 1st, 2nd, 3rd, and later failed runs in a row (for example a usage limit).
 BACKOFF_STEPS=(3600 7200 14400 21600)
+# Seconds between redraws of --watch.
+WATCH_EVERY=5
+
+# Review points. stop = a GATE row pauses the build until STATUS is set back to ready.
+# continue = a GATE row is recorded and the build keeps going; the report lists it at the end.
+# A GATE! row always stops. Use continue only when every gate has a test task before it.
+GATE_MODE="stop"
+
+# Handoff report, written whenever the build stops (gate, blocked, or done) to
+# LOG_DIR/report-latest.md. REPORT=1 makes one short call to REPORT_MODEL to write the plain-words
+# summary. REPORT=0 skips the call and uses the task notes.
+REPORT=1
+REPORT_MODEL="sonnet"
+REPORT_EFFORT="low"
+
+# Safety copies of unfinished work, saved as commits under refs/claude-build/rescue/ that are on no
+# branch. SNAPSHOT_EVERY is seconds between copies (0 turns them off). SNAPSHOT_KEEP is how many to keep.
+# New files that are not ignored are saved too, so keep build output in .gitignore.
+SNAPSHOT_EVERY=60
+SNAPSHOT_KEEP=60
+
+# 1 = write one readable line per step to the log (needs jq). 0 = off.
+STREAM=1
+
+# How long Claude Code waits for a background helper after the model ends its turn, in milliseconds.
+# 0 = unlimited, and TIMEOUT ends a run that never finishes.
+BG_WAIT_CEILING_MS=0
 
 # Safety.
 REQUIRE_GIT=1
 REDACT_FILES=(".env.local")
 ```
 
-How to set the values that vary by project is in SKILL.md, "Build claude-build.conf from the plan". Other recipes (documentation project, overnight, two builds in one project) are in claude-build's `examples/claude-build.conf`. The prompt does not tell the run to read CLAUDE.md, because Claude Code loads it at the start of every session.
+How to set the values that vary by project is in SKILL.md, "Build claude-build.conf from the plan". Other recipes (documentation project, overnight, two builds in one project) are in claude-build's `examples/claude-build.conf`. The built-in prompt does not tell the run to read CLAUDE.md, because Claude Code loads it at the start of every session.
 
 ## build-plan-YYYY-MM-DD-HHMM.md
 
@@ -191,7 +239,7 @@ List only files that exist. Each item is a link.
 
 ## Worked example
 
-Source: the "Client Update on First Launch" use case and its six requirements (`REQ-ClientUpdate-01` to `-06`) from `use-case-requirements/references/format.md`. Stack chosen in Step 1: TypeScript, pnpm, a small mobile client and a platform API. The platform API's bundle response is the only place a wrong version flag would silently strand users on an old build, so it is the protected path.
+Source: the "Client Update on First Launch" use case and its six requirements (`REQ-ClientUpdate-01` to `-06`) from `use-case-requirements/references/format.md`. Stack chosen in Step 1: TypeScript, pnpm, a small mobile client and a platform API. The check commands are `pnpm check`, `pnpm lint`, and `pnpm test`. The platform API's bundle response is the only place a wrong version flag would silently strand users on an old build, so it is the protected path. The user chose to run to the end with automated checks, so `GATE_MODE` is `continue`.
 
 ### BUILD_STATE.md (excerpt)
 
@@ -202,20 +250,38 @@ BLOCKED_REASON:
 
 | Id | Milestone | Task | Model | Effort | Status | Commit | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 0.1 | M0 Tooling | Scaffold the pnpm workspace with `apps/client` and `apps/platform` per build plan section 1. `pnpm check` and `pnpm test` run and report zero tests | sonnet | | todo | | |
+| 0.1 | M0 Tooling | Scaffold the pnpm workspace with `apps/client` and `apps/platform` and a test runner per build plan section 1. `pnpm check` and `pnpm test` run and report zero tests | sonnet | | todo | | |
 | 0.2 | M0 Tooling | Add lint and format config per build plan section 4. `pnpm lint` passes | haiku | | todo | | |
 | 0.3 | M0 Tooling | Add the test-case coverage script: lists ids in planning/test-cases.md with no test. `pnpm check:coverage` runs | haiku | | todo | | |
-| 1.1 | M1 Thin path | Platform: bundle endpoint returns the version flag and Upgrade prompt per REQ-ClientUpdate-02. Tests TC-ClientUpdate-02 and TC-ClientUpdate-03 pass | opus | high | todo | | Protected: a wrong flag strands users |
-| 1.2 | M1 Thin path | Client: request bundle info once per launch per REQ-ClientUpdate-01. Test TC-ClientUpdate-01 passes | sonnet | | todo | | |
-| 1.3 | M1 Thin path | Client: show the required-update page with a working Upgrade link per REQ-ClientUpdate-03. Test TC-ClientUpdate-04 passes | sonnet | | todo | | |
-| 1.4 | M1 Thin path | GATE. Stop after 1.3. Run the client against the local platform and confirm a required update shows the page and link | | | todo | | |
-| 2.1 | M2 Variations | Client: decline an update without persisting a declined state per REQ-ClientUpdate-04. Test TC-ClientUpdate-05 passes | sonnet | | todo | | |
-| 2.2 | M2 Variations | Client: hand off the install to the device browser per REQ-ClientUpdate-05. Test TC-ClientUpdate-06 passes | sonnet | | todo | | |
-| 2.3 | M2 Variations | Client: degrade gracefully when the platform is unreachable per REQ-ClientUpdate-06. Test TC-ClientUpdate-07 passes | sonnet | | todo | | |
-| 2.4 | M2 Variations | GATE. Stop after 2.3. Review the diff of 1.1 and the full test run | | | todo | | |
+| 0.4 | M0 Tooling | Confirm every check command passes on the empty project: `pnpm check`, `pnpm lint`, `pnpm test`, `pnpm check:coverage` each exit 0. Fix tooling config only | haiku | | todo | | |
+| 1.1 | M1 Thin path | Platform: bundle endpoint returns the version flag and Upgrade prompt per REQ-ClientUpdate-02. `pnpm check` passes | opus | high | todo | | Protected: a wrong flag strands users |
+| 1.2 | M1 Thin path | Client: request bundle info once per launch per REQ-ClientUpdate-01. `pnpm check` passes | sonnet | | todo | | |
+| 1.3 | M1 Thin path | Client: show the required-update page with a working Upgrade link per REQ-ClientUpdate-03. `pnpm check` passes | sonnet | | todo | | |
+| 1.4 | M1 Thin path | Write the M1 tests from TC-ClientUpdate-01 to TC-ClientUpdate-04 in planning/test-cases.md, each named with its TC id. `pnpm test` passes | sonnet | | todo | | |
+| 1.5 | M1 Thin path | GATE! Decision for M2: the bundle response shape. In Notes say what was built, then open apps/platform/src/bundle.ts and the `pnpm test` output. A correct result is a response whose update-required flag matches the latest version in the test fixtures. If the shape is wrong, change it before M2 builds on it | | | todo | | |
+| 2.1 | M2 Variations | Client: decline an update without persisting a declined state per REQ-ClientUpdate-04. `pnpm check` passes | sonnet | | todo | | |
+| 2.2 | M2 Variations | Client: hand off the install to the device browser per REQ-ClientUpdate-05. `pnpm check` passes | sonnet | | todo | | |
+| 2.3 | M2 Variations | Client: degrade gracefully when the platform is unreachable per REQ-ClientUpdate-06. `pnpm check` passes | sonnet | | todo | | |
+| 2.4 | M2 Variations | Write the M2 tests from TC-ClientUpdate-05 to TC-ClientUpdate-07, each named with its TC id. `pnpm test` and `pnpm check:coverage` pass | sonnet | | todo | | |
+| 2.5 | M2 Variations | GATE. Review point: the unreachable-platform screen. Open apps/client/src/screens/offline.tsx and the output of `pnpm test`. A correct result is a friendly message with a link to the content site. If it is wrong, note it and fix it after the build | | | todo | | |
 ```
 
-Note how the rows are ordered: 0.2 and 0.3 are scripted Haiku work and sit together after the Sonnet scaffold. 1.1 is Opus because it is the protected path, so the Sonnet rows that depend on it follow it. Rows 1.2 and 1.3 both name Sonnet, so one run does both.
+### claude-build.conf (excerpt)
+
+```bash
+GATE_MODE="continue"
+ALLOWED_TOOLS=(
+  "Read" "Edit" "Write" "Glob" "Grep"
+  "Bash(ls:*)" "Bash(cat:*)" "Bash(mkdir:*)"
+  "Bash(pnpm:*)"
+  "Bash(git status:*)" "Bash(git diff:*)" "Bash(git add:*)" "Bash(git commit:*)" "Bash(git log:*)"
+)
+TASKS_PER_RUN=3
+```
+
+`Bash(pnpm:*)` covers all three check commands. `Agent` is absent because the plan uses no helper agents. `TASKS_PER_RUN` is 3 because 1.1 is on a protected path.
+
+Note how the rows are ordered: 0.2 to 0.4 are scripted Haiku work and sit together after the Sonnet scaffold. 1.1 is Opus because it is the protected path, so the Sonnet rows that depend on it follow it. Rows 1.2 to 1.4 all name Sonnet, so one run does them. Each milestone ends with a test task, then a gate. 1.5 is `GATE!` because M2 builds on the bundle response, so it stops even in `continue` mode. 2.5 is a plain `GATE`, so in `continue` mode the build records it, finishes, and lists it in the report.
 
 ### Coverage list (shown to the user, kept in the build plan)
 
