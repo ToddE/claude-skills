@@ -40,7 +40,7 @@ Then check for what the plan cannot be made without. Ask one question at a time,
 3. **Protected areas.** Where a silent mistake would be harmful: authentication, encryption, personal or financial data, payments, deletion, permissions. These get the strongest model and a review.
 4. **Credentials and external steps.** Accounts, keys, DNS, or approvals the builder cannot create. Each becomes a stop condition with a mock to continue on.
 5. **Gates.** Where a person must look. Default to one after any risky spike and one at each milestone that changes who can use the product. For each, ask whether later work depends on the answer (see Step 4).
-6. **Review mode.** Does the user want to review at each milestone (`GATE_MODE="stop"`), or let the build run to the end with automated checks and one report (`GATE_MODE="continue"`)? Recommend `continue` only when the check commands from question 2 exist and every gate has a test task before it (Step 3). claude-build does not run the checks itself at a gate, so the test tasks are what make `continue` safe. Gates marked `GATE!` stop the build in both modes.
+6. **Review mode.** Does the user want to review at each milestone (`GATE_MODE="stop"`), or let the build run to the end with automated checks and one report (`GATE_MODE="continue"`)? Recommend `continue` only when `GATE_CHECKS` is not empty, meaning the check commands from question 2 exist. Reason: claude-build runs those commands itself at each gate and at the end, with no model deciding whether they passed. It sends a failure to a fix session, runs the checks again, and stops the build as blocked if they still fail. Without them, `continue` would run to the end with nothing checking the work. Gates marked `GATE!` stop the build in both modes.
 
 If none of the upstream artifacts exist, say so and recommend them as an option, not a requirement. Check whether the recommended skill is available in your current list of skills. If it isn't, give the user its GitHub location (https://github.com/ToddE/claude-skills/tree/main/product-management/skills/<skill-name>) or offer to fetch https://raw.githubusercontent.com/ToddE/claude-skills/main/product-management/skills/<skill-name>/SKILL.md and follow it in this conversation. Fetch it only if the user says yes. If the user wants to proceed anyway, plan from a short description. Record each assumption as an open question (see Step 5).
 
@@ -54,7 +54,7 @@ Order milestones by dependency and risk, not by feature list:
 4. **Feature milestones.** Group use cases that share data or screens. Each names the use cases it covers.
 5. **Hardening and launch.** Security review, accessibility, performance, backups, runbook.
 
-Each milestone states what it builds, which use cases it covers, and a "Done when" line made of checks that a command can run. Each milestone after M0 ends with a task that writes its automated tests, then a gate that says what the person should look at.
+Each milestone states what it builds, which use cases it covers, and a "Done when" line made of checks that a command can run. M0's "Done when" includes every `GATE_CHECKS` command passing on the empty project. Each milestone after M0 ends with a task that writes its automated tests, then a gate that says what the person should look at.
 
 ## Step 3: Break milestones into tasks
 
@@ -118,8 +118,11 @@ The config is where the plan meets the tool, so derive each setting from what yo
 | `PROMPT`, `PROMPT_FILE` | Leave both out. claude-build's built-in prompt applies, and it adds rules about gates, stop requests, and leftover files that a copied prompt would miss or let go stale |
 | `MODEL`, `MODEL_FROM_STATE` | `MODEL` is the model of most tasks (usually `sonnet`). `MODEL_FROM_STATE=1` so the Model column decides |
 | `EFFORT_FROM_STATE`, `EFFORT_DEFAULTS` | `1`, and the defaults from Step 4 |
-| `ALLOWED_TOOLS` | Read, Edit, Write, Glob, Grep, plus a `Bash(...)` entry for every check command from Step 1 and for local dev tools. Include `ls`, `cat`, and `mkdir`, and the `git add`, `git commit`, `git status`, `git diff`, and `git log` entries. Never add push, deploy, publish, or delete commands. Leave `Agent` out unless the plan needs helper agents, because a session that hands work to a background helper can lose it |
-| `GATE_MODE` | The answer to the review-mode question in Step 1: `stop` or `continue`. Default `stop` |
+| `ALLOWED_TOOLS` | Read, Edit, Write, Glob, Grep, plus a `Bash(...)` entry for every `GATE_CHECKS` command and for local dev tools, so fix sessions can run them (`Bash(pnpm:*)` covers `pnpm check`, `pnpm test`, and `pnpm lint`). Include `ls`, `cat`, and `mkdir`, and the `git add`, `git commit`, `git status`, `git diff`, and `git log` entries. Never add push, deploy, publish, or delete commands. Leave `Agent` out unless the plan needs helper agents, because a session that hands work to a background helper can lose it |
+| `GATE_CHECKS` | The check commands from Step 1 question 2, as an array such as `("pnpm check" "pnpm test" "pnpm lint")`. Each exits 0 on a healthy project and has a matching `Bash(...)` entry in `ALLOWED_TOOLS`. Empty turns the checks off |
+| `GATE_MODE` | The answer to the review-mode question in Step 1: `stop` or `continue`. Use `continue` only when `GATE_CHECKS` is not empty. Default `stop` |
+| `GATE_FIX_TRIES`, `FIX_MODELS`, `CHECK_TIMEOUT` | Leave at the defaults (`2`, `("sonnet" "opus")`, `"30m"`). Raise `CHECK_TIMEOUT` only if one check, such as an end-to-end suite, runs longer |
+| `TEST_GLOBS` | Leave at the default unless the project keeps tests somewhere unusual. The report lists test files a fix session changed, because a fix can pass a check by weakening a test |
 | `TASKS_PER_RUN` | 5 by default. 2 or 3 for large tasks or protected areas, so work is committed often. Higher (8) for small mechanical rows |
 | `TIMEOUT` | `3h` by default. Raise it only if a single task, such as a long test run, needs it |
 | `REDACT_FILES` | Every file that holds secrets (`.env.local`, `.dev.vars`) |
@@ -145,10 +148,11 @@ Before writing, tell the user the format (Markdown, plus one shell-format config
 - No unescaped `|` in any cell: every row has the same number of cells as the header.
 - Every `GATE` and `GATE!` row has a test task directly before it, and every milestone after M0 has one.
 - Every decision that later work depends on (a spike result, a design choice, credentials, a protected area) uses `GATE!`. Gate Tasks name the files to open, the correct result, and the fix if it is wrong.
-- If `GATE_MODE` is `continue`, the check commands exist and each is allowed in `ALLOWED_TOOLS`.
+- If `GATE_MODE` is `continue`, `GATE_CHECKS` is not empty.
+- Every `GATE_CHECKS` command exits 0 on a healthy project and has a `Bash(...)` entry in `ALLOWED_TOOLS`.
 - Every Must requirement and every use case is covered, and the coverage list is shown to the user.
 - Protected areas are all assigned to Opus and listed in `CLAUDE.md`.
-- `claude-build.conf` sets every key in the template, `PROJECT_DIR` is absolute, and `CONTEXT_FILES` names a file that exists. It has no `PROMPT`. Every check command has a `Bash(...)` entry in `ALLOWED_TOOLS`, `Agent` is absent unless the plan needs it, and nothing deploys, pushes, or deletes.
+- `claude-build.conf` sets every key in the template, `PROJECT_DIR` is absolute, and `CONTEXT_FILES` names a file that exists. It has no `PROMPT`. `Agent` is absent unless the plan needs it, and nothing deploys, pushes, or deletes.
 - Each stop condition in `CLAUDE.md` says what the builder does instead of waiting (usually: continue with a mock or a marker).
 - If `clean-style` is available in your current list of skills, check the prose in the build plan and `CLAUDE.md` against its `references/rules.md` before presenting.
 

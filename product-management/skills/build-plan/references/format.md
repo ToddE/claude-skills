@@ -1,6 +1,6 @@
 # Build Plan Format
 
-These formats match claude-build as documented in its README and script (https://github.com/ToddE/claude-build, checked against v1.2.6, commit 1efe679, 2026-10-09). Its reference examples are `examples/BUILD_STATE.md`, `examples/PLAN.md`, and `examples/claude-build.conf`. The script reads `BUILD_STATE.md` and `claude-build.conf` without a model, so those two are a contract. The other three files are read by Claude Code sessions and can be adapted.
+These formats match claude-build as documented in its README and script (https://github.com/ToddE/claude-build, checked against v1.3.0, commit 27d7058, 2026-10-09). Its reference examples are `examples/BUILD_STATE.md`, `examples/PLAN.md`, and `examples/claude-build.conf`. The script reads `BUILD_STATE.md` and `claude-build.conf` without a model, so those two are a contract. The other three files are read by Claude Code sessions and can be adapted.
 
 ## BUILD_STATE.md
 
@@ -57,7 +57,7 @@ Then set `STATUS: blocked` and `BLOCKED_REASON: Answer the open questions in thi
 
 ### Test rows
 
-The last task of each milestone after M0 writes or extends the automated tests for that milestone, from its test cases, and cites the TC ids. It sits directly before the milestone's gate row. M0 sets up the test runner and ends with a task that makes every check command exit 0 on the empty project.
+The last task of each milestone after M0 writes or extends the automated tests for that milestone, from its test cases, and cites the TC ids. It sits directly before the milestone's gate row. M0 sets up the test runner and ends with a task that makes every `GATE_CHECKS` command exit 0 on the empty project.
 
 ```
 | 1.4 | M1 Thin path | Write the M1 tests from TC-ClientUpdate-01 to TC-ClientUpdate-04 in planning/test-cases.md, each named with its TC id. `pnpm test` passes | sonnet | | todo | | |
@@ -72,7 +72,7 @@ Two kinds, both with no Model, both directly after the milestone's test row.
 | 2.5 | M2 Variations | GATE. Review point ... | | | todo | | |
 ```
 
-- **`GATE`** is a review point. With `GATE_MODE="stop"` (the default) the run sets the row `done`, sets `STATUS: gate`, and stops. The person sets `STATUS: ready` to continue (`claude-build --ready` makes the edit). With `GATE_MODE="continue"` the build records the point, keeps going, and lists it in the report at the end.
+- **`GATE`** is a review point. With `GATE_MODE="stop"` (the default) the run sets the row `done`, sets `STATUS: gate`, and stops. The person sets `STATUS: ready` to continue (`claude-build --ready` makes the edit). With `GATE_MODE="continue"` the build records the point, keeps going, and lists it in the report at the end. If `GATE_CHECKS` is set, claude-build runs those commands itself at each `GATE` row and at the end, with no model deciding whether they passed. A failure goes to a fix session that gets the failing command and its output, and the checks run again. If they still fail after `GATE_FIX_TRIES` tries, the build stops as blocked.
 - **`GATE!`** always stops, in both modes. Use it for a decision that later work depends on: a risk spike result, a design choice, credentials, or a protected area where a person should look first.
 
 Write the Task cell for a person who has not read the plan. Say what was built, the path of each file to open (from the project root), what a correct result looks like, and what to do if it is wrong. The run turns this into the row's Notes and its final message.
@@ -143,9 +143,21 @@ BACKOFF_STEPS=(3600 7200 14400 21600)
 # Seconds between redraws of --watch.
 WATCH_EVERY=5
 
+# Automated checks. claude-build runs these commands itself at each GATE row and at the end of the
+# build. Each exits 0 on a healthy project and needs a Bash(...) entry in ALLOWED_TOOLS. Empty = off.
+GATE_CHECKS=("<check command>" "<check command>")
+# When a check fails: fix sessions to try before the build stops as blocked.
+GATE_FIX_TRIES=2
+# Model for each fix attempt, in order. The last one repeats.
+FIX_MODELS=("sonnet" "opus")
+# Longest one check command may run.
+CHECK_TIMEOUT="30m"
+# Paths counted as tests when the report lists test files a fix session changed.
+TEST_GLOBS=("test/*" "tests/*" "*/test/*" "*/tests/*" "*__tests__*" "*.test.*" "*.spec.*" "*_test.*" "test_*")
+
 # Review points. stop = a GATE row pauses the build until STATUS is set back to ready.
 # continue = a GATE row is recorded and the build keeps going; the report lists it at the end.
-# A GATE! row always stops. Use continue only when every gate has a test task before it.
+# A GATE! row always stops. Use continue only when GATE_CHECKS is not empty.
 GATE_MODE="stop"
 
 # Handoff report, written whenever the build stops (gate, blocked, or done) to
@@ -239,7 +251,7 @@ List only files that exist. Each item is a link.
 
 ## Worked example
 
-Source: the "Client Update on First Launch" use case and its six requirements (`REQ-ClientUpdate-01` to `-06`) from `use-case-requirements/references/format.md`. Stack chosen in Step 1: TypeScript, pnpm, a small mobile client and a platform API. The check commands are `pnpm check`, `pnpm lint`, and `pnpm test`. The platform API's bundle response is the only place a wrong version flag would silently strand users on an old build, so it is the protected path. The user chose to run to the end with automated checks, so `GATE_MODE` is `continue`.
+Source: the "Client Update on First Launch" use case and its six requirements (`REQ-ClientUpdate-01` to `-06`) from `use-case-requirements/references/format.md`. Stack chosen in Step 1: TypeScript, pnpm, a small mobile client and a platform API. The check commands are `pnpm check`, `pnpm lint`, and `pnpm test`. The platform API's bundle response is the only place a wrong version flag would silently strand users on an old build, so it is the protected path. The user chose to run to the end with automated checks, so `GATE_CHECKS` lists the three commands and `GATE_MODE` is `continue`.
 
 ### BUILD_STATE.md (excerpt)
 
@@ -269,6 +281,7 @@ BLOCKED_REASON:
 ### claude-build.conf (excerpt)
 
 ```bash
+GATE_CHECKS=("pnpm check" "pnpm test" "pnpm lint")
 GATE_MODE="continue"
 ALLOWED_TOOLS=(
   "Read" "Edit" "Write" "Glob" "Grep"
@@ -279,7 +292,7 @@ ALLOWED_TOOLS=(
 TASKS_PER_RUN=3
 ```
 
-`Bash(pnpm:*)` covers all three check commands. `Agent` is absent because the plan uses no helper agents. `TASKS_PER_RUN` is 3 because 1.1 is on a protected path.
+`Bash(pnpm:*)` covers all three `GATE_CHECKS` commands. `Agent` is absent because the plan uses no helper agents. `TASKS_PER_RUN` is 3 because 1.1 is on a protected path.
 
 Note how the rows are ordered: 0.2 to 0.4 are scripted Haiku work and sit together after the Sonnet scaffold. 1.1 is Opus because it is the protected path, so the Sonnet rows that depend on it follow it. Rows 1.2 to 1.4 all name Sonnet, so one run does them. Each milestone ends with a test task, then a gate. 1.5 is `GATE!` because M2 builds on the bundle response, so it stops even in `continue` mode. 2.5 is a plain `GATE`, so in `continue` mode the build records it, finishes, and lists it in the report.
 
