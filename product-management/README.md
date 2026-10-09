@@ -230,10 +230,12 @@ Turns the pipeline's output into an implementation plan that [claude-build](http
 **What it does:**
 - Orders milestones by dependency and risk: tooling, a risk spike with a gate, a thin end-to-end path, features, then hardening
 - Breaks each milestone into tasks that a fresh session can finish and verify, each with a pointer to the requirement and a check that proves it is done
-- Assigns a model and an effort level to every task, groups same-model tasks together, and adds gate rows where a person should look
+- Assigns a model and an effort level to every task and groups same-model tasks together
+- Ends each milestone with a task that writes its automated tests from your test cases, then a review point. `GATE` is a review point, and `GATE!` always stops, for decisions that later work depends on
+- Asks whether you want to review at each milestone or let the build run to the end. When it runs to the end, claude-build runs your check commands itself at each review point and sends failures to a fix session
 - Checks that every Must requirement and every use case maps to a task, and shows you the coverage list
 - Lists unresolved questions under "Open questions" and sets the build to blocked, the same way claude-build's own `--init` does
-- Writes the files claude-build reads: `BUILD_STATE.md`, `CLAUDE.md`, and `claude-build.conf` (every setting, with allowed commands taken from your check commands), plus a dated build plan and engineering prompt
+- Writes the files claude-build reads: `BUILD_STATE.md`, `CLAUDE.md`, and `claude-build.conf` (every setting, with your check commands as `GATE_CHECKS` and in the allowed commands), plus a dated build plan and engineering prompt
 
 **Example prompts:**
 - "Turn these requirements into a build plan for claude-build"
