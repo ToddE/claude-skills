@@ -1,0 +1,16 @@
+{
+  "name": "use-case-test-cases",
+  "displayName": "Use Case Test Cases",
+  "description": "Generate test cases directly from a UML-style use case (written with the use-case-uml skill or in that same format): one test case per Basic Path, Alternate Path, and Exception Path, with expected results taken from the use case's Post-Condition(s).",
+  "version": "1.3.0",
+  "author": {
+    "name": "A. Todd Emerson",
+    "url": "https://github.com/ToddE/claude-skills"
+  },
+  "license": "MIT",
+  "repository": "https://github.com/ToddE/claude-skills",
+  "icon": "./icon.svg",
+  "skills": [
+    "./"
+  ]
+}

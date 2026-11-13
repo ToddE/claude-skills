@@ -1,0 +1,16 @@
+{
+  "name": "working-backwards-prfaq",
+  "displayName": "Working Backwards PR/FAQ",
+  "description": "Generate Amazon-style Working Backwards PR/FAQ documents for any kind of announcement: a new product, a partnership, a nonprofit initiative, a political campaign, a community program, or anything else defined by starting from the audience's experience and working backwards.",
+  "version": "1.3.0",
+  "author": {
+    "name": "A. Todd Emerson",
+    "url": "https://github.com/ToddE/claude-skills"
+  },
+  "license": "MIT",
+  "repository": "https://github.com/ToddE/claude-skills",
+  "icon": "./icon.svg",
+  "skills": [
+    "./"
+  ]
+}

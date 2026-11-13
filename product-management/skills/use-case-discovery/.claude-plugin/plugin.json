@@ -1,0 +1,16 @@
+{
+  "name": "use-case-discovery",
+  "displayName": "Use Case Discovery",
+  "description": "Interview the user about a feature or initiative at a high level and decompose it into a candidate list of use cases (name, one-line summary, rough actors, rough trigger) before any of them get fully written up.",
+  "version": "1.3.0",
+  "author": {
+    "name": "A. Todd Emerson",
+    "url": "https://github.com/ToddE/claude-skills"
+  },
+  "license": "MIT",
+  "repository": "https://github.com/ToddE/claude-skills",
+  "icon": "./icon.svg",
+  "skills": [
+    "./"
+  ]
+}
