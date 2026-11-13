@@ -8,7 +8,11 @@
     {
       "name": "clean-style",
       "source": "./clean-style",
-      "description": "Apply a strict anti-AI-slop writing checklist to external-facing prose. The shared baseline other skills in this repo defer to."
+      "description": "Apply a strict anti-AI-slop writing checklist to external-facing prose. The shared baseline other skills in this repo defer to.",
+      "strict": false,
+      "skills": [
+        "./"
+      ]
     },
     {
       "name": "use-cases",
@@ -24,37 +28,65 @@
     {
       "name": "working-backwards-prfaq",
       "source": "./product-management/skills/working-backwards-prfaq",
-      "description": "Generate Amazon-style Working Backwards PR/FAQ documents for any kind of announcement: a new product, a partnership, a nonprofit initiative, a political campaign, a community program, or anything else defined by starting from the audience's experience and working backwards."
+      "description": "Generate Amazon-style Working Backwards PR/FAQ documents for any kind of announcement: a new product, a partnership, a nonprofit initiative, a political campaign, a community program, or anything else defined by starting from the audience's experience and working backwards.",
+      "strict": false,
+      "skills": [
+        "./"
+      ]
     },
     {
       "name": "use-case-discovery",
       "source": "./product-management/skills/use-case-discovery",
-      "description": "Interview the user about a feature or initiative at a high level and decompose it into a candidate list of use cases (name, one-line summary, rough actors, rough trigger) before any of them get fully written up."
+      "description": "Interview the user about a feature or initiative at a high level and decompose it into a candidate list of use cases (name, one-line summary, rough actors, rough trigger) before any of them get fully written up.",
+      "strict": false,
+      "skills": [
+        "./"
+      ]
     },
     {
       "name": "use-case-uml",
       "source": "./product-management/skills/use-case-uml",
-      "description": "Write UML-style integration use cases (actors, basic path, alternate paths, exception paths, post-conditions) in a fixed, repeatable structure."
+      "description": "Write UML-style integration use cases (actors, basic path, alternate paths, exception paths, post-conditions) in a fixed, repeatable structure.",
+      "strict": false,
+      "skills": [
+        "./"
+      ]
     },
     {
       "name": "use-case-test-cases",
       "source": "./product-management/skills/use-case-test-cases",
-      "description": "Generate test cases directly from a UML-style use case (written with the use-case-uml skill or in that same format): one test case per Basic Path, Alternate Path, and Exception Path, with expected results taken from the use case's Post-Condition(s)."
+      "description": "Generate test cases directly from a UML-style use case (written with the use-case-uml skill or in that same format): one test case per Basic Path, Alternate Path, and Exception Path, with expected results taken from the use case's Post-Condition(s).",
+      "strict": false,
+      "skills": [
+        "./"
+      ]
     },
     {
       "name": "use-case-requirements",
       "source": "./product-management/skills/use-case-requirements",
-      "description": "Derive trackable functional requirements, either from a completed use case (written with the use-case-uml skill) or, when no use case exists yet, from a short interview modeled on working-backwards-prfaq's intake."
+      "description": "Derive trackable functional requirements, either from a completed use case (written with the use-case-uml skill) or, when no use case exists yet, from a short interview modeled on working-backwards-prfaq's intake.",
+      "strict": false,
+      "skills": [
+        "./"
+      ]
     },
     {
       "name": "architect-review",
       "source": "./product-management/skills/architect-review",
-      "description": "Produce a structured architectural recommendation for an initiative from a specific senior architect persona, using whatever pipeline artifacts exist: PR/FAQ, use cases, functional requirements, or a plain description."
+      "description": "Produce a structured architectural recommendation for an initiative from a specific senior architect persona, using whatever pipeline artifacts exist: PR/FAQ, use cases, functional requirements, or a plain description.",
+      "strict": false,
+      "skills": [
+        "./"
+      ]
     },
     {
       "name": "build-plan",
       "source": "./product-management/skills/build-plan",
-      "description": "Turn product planning artifacts (use cases, functional requirements, test cases, an architecture review, a PR/FAQ) into an implementation plan that an unattended build can follow: ordered milestones with gates, a task table with a model and effort level for each task, project rules and stop conditions, and the engineering prompt that tells the builder what to read first."
+      "description": "Turn product planning artifacts (use cases, functional requirements, test cases, an architecture review, a PR/FAQ) into an implementation plan that an unattended build can follow: ordered milestones with gates, a task table with a model and effort level for each task, project rules and stop conditions, and the engineering prompt that tells the builder what to read first.",
+      "strict": false,
+      "skills": [
+        "./"
+      ]
     }
   ],
   "description": "Claude Code plugins by Todd Emerson: a writing checklist, a use case skill, and a product-management pipeline from PR/FAQ to a claude-build implementation plan. Install the pipeline as one bundle or any skill on its own."
