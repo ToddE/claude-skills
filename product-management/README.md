@@ -13,12 +13,28 @@ general install options. This file covers what's specific to this plugin.
 
 ### In a terminal (Claude Code CLI)
 
+Update Claude Code first. Single-command plugin installs need version 2.1.275 or later.
+
 ```
-/plugin marketplace add ToddE/claude-skills
-/plugin install product-management
+claude update
+claude plugin install product-management --marketplace ToddE/claude-skills
 ```
 
-Skills inside the plugin are namespaced, e.g. `/product-management:working-backwards-prfaq`,
+This installs all seven skills. To install only some, use the skill's own plugin name in the same command:
+
+| Plugin | Skill |
+| --- | --- |
+| `working-backwards-prfaq` | Working Backwards PR/FAQ |
+| `use-case-discovery` | Use Case Discovery |
+| `use-case-uml` | Use Case UML |
+| `use-case-test-cases` | Use Case Test Cases |
+| `use-case-requirements` | Use Case Requirements |
+| `architect-review` | Architect Review |
+| `build-plan` | Build Plan |
+
+For example, `claude plugin install build-plan --marketplace ToddE/claude-skills`. Choose the bundle or the individual plugins. The bundle already contains all seven skills. Run `claude plugin marketplace update` later to pull new versions.
+
+Skills inside the bundle are namespaced, e.g. `/product-management:working-backwards-prfaq`,
 but still trigger automatically from a matching request the same as any standalone skill;
 the namespace only matters if you want to invoke one by name directly.
 
@@ -37,8 +53,7 @@ the namespace only matters if you want to invoke one by name directly.
 the marketplace at your local path instead of the GitHub repo:
 
 ```
-/plugin marketplace add /path/to/your/claude-skills
-/plugin install product-management
+claude plugin install product-management --marketplace /path/to/your/claude-skills
 ```
 
 Claude Code re-reads the local path each time, so edits to `SKILL.md` or `references/`
@@ -140,6 +155,21 @@ Interviews you about a feature or initiative at a high level and decomposes it i
 - "Help me break this initiative down into use cases"
 - "Scope out the use cases before we write them"
 
+**Sample output** (from the DispatchIQ run, a dispatch tool for small home-service businesses; [full file](test/output/2026-09-22-dispatchiq/02-use-case-candidates.md)):
+
+| Name | Summary | Rough Actors | Rough Trigger |
+| --- | --- | --- | --- |
+| Auto-Route a New Job | The system assigns a newly created job to the technician who can reach it soonest. | Dispatcher, DispatchIQ, Technician | Dispatcher creates a new job. |
+| Notify Customer of Technician ETA | The system texts the customer a live ETA once a technician is en route. | DispatchIQ, Technician, Customer | Technician starts traveling to a job. |
+| Re-Route on Technician Delay | The system detects a technician is running behind and updates the customer's ETA automatically. | DispatchIQ, Technician, Customer | |
+| Technician Views Daily Route | A technician opens the mobile view to see their assigned jobs in order. | Technician, DispatchIQ | Technician starts their shift. |
+| Onboard a Shop to DispatchIQ | A new customer's technicians, service area, and SMS settings get configured before their first job. | Dispatcher, DispatchIQ | Shop signs up for the pilot or a paid plan. |
+| Dispatcher Reassigns a Job Manually | A dispatcher overrides the automatic routing to assign a job to a specific technician. | Dispatcher, DispatchIQ, Technician | Dispatcher disagrees with the automatic assignment. |
+
+The skill adds review notes under the table. Two from this run:
+- "Re-Route on Technician Delay" has no trigger of its own because it continues an earlier flow. Confirm it should stand alone and not fold into "Auto-Route a New Job" or "Notify Customer of Technician ETA".
+- "Auto-Route a New Job" and "Dispatcher Reassigns a Job Manually" are closely related. Confirm they stay separate, since automatic and manual assignment have different actors driving the decision.
+
 ### Use Case UML
 
 [Download (.skill)](https://github.com/ToddE/claude-skills/releases/latest/download/use-case-uml.skill)
@@ -223,17 +253,17 @@ Gives a structured architectural recommendation from a specific Sr. Architect pe
 
 [Download (.skill)](https://github.com/ToddE/claude-skills/releases/latest/download/build-plan.skill)
 
-Turns the pipeline's output into an implementation plan that [claude-build](https://github.com/ToddE/claude-build) can run unattended. It plans from whatever exists (use cases, requirements, test cases, an architecture review, a PR/FAQ, or a description) and asks only about what is missing: the stack, the check commands, the protected areas, the credentials, and the gates. It does not write code, and it does not start the build.
+Turns the pipeline's output into an implementation plan [claude-build](https://github.com/ToddE/claude-build) can run unattended. It plans from whatever exists (use cases, requirements, test cases, an architecture review, a PR/FAQ, or a description) and asks only about what is missing: the stack, the check commands, the protected areas, the credentials, and the gates. It does not write code, and it does not start the build.
 
 **Triggers when you mention:** an implementation plan, a build plan, an engineering prompt, "break this into tasks," "plan the build," or setting up claude-build.
 
 **What it does:**
 - Orders milestones by dependency and risk: tooling, a risk spike with a gate, a thin end-to-end path, features, then hardening
-- Breaks each milestone into tasks that a fresh session can finish and verify, each with a pointer to the requirement and a check that proves it is done
+- Breaks each milestone into tasks a fresh session can finish and verify, each with a pointer to the requirement and a check proving it is done
 - Assigns a model and an effort level to every task and groups same-model tasks together
-- Ends each milestone with a task that writes its automated tests from your test cases, then a review point. `GATE` is a review point, and `GATE!` always stops, for decisions that later work depends on
-- Asks whether you want to review at each milestone or let the build run to the end. When it runs to the end, claude-build runs your check commands itself at each review point and sends failures to a fix session
-- Checks that every Must requirement and every use case maps to a task, and shows you the coverage list
+- Ends each milestone with a task writing its automated tests from your test cases, then a review point. `GATE` is a review point, and `GATE!` stops the build in every mode, for decisions later work depends on
+- Asks whether you want to review at each milestone or let the build run to the end. In run-to-the-end mode, claude-build runs your check commands itself at each review point and sends failures to a fix session
+- Checks each Must requirement and each use case against the task list, and shows you the coverage list
 - Lists unresolved questions under "Open questions" and sets the build to blocked, the same way claude-build's own `--init` does
 - Writes the files claude-build reads: `BUILD_STATE.md`, `CLAUDE.md`, and `claude-build.conf` (every setting, with your check commands as `GATE_CHECKS` and in the allowed commands), plus a dated build plan and engineering prompt
 

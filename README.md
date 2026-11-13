@@ -32,18 +32,41 @@ This repo is public. Give Claude a skill's `SKILL.md` URL, either paste it or as
 
 This works well to kick the tires. Nothing persists between sessions, and it won't trigger automatically on a later message the way an installed skill does. Once you know you want a skill, install it with one of the options below.
 
-### Option 1: Add the plugin marketplace (Claude Code)
+### Option 1: Install as a plugin (Claude Code)
+
+Update Claude Code first. Single-command plugin installs need version 2.1.275 or later.
 
 ```
-/plugin marketplace add ToddE/claude-skills
-/plugin install product-management
-/plugin install clean-style
-/plugin install use-cases
+claude update
+claude plugin install product-management --marketplace ToddE/claude-skills
 ```
 
-Installs straight from this repo; no download step, and updates whenever this repo does. Skills inside the `product-management` plugin are namespaced (e.g. `/product-management:working-backwards-prfaq`) but still trigger automatically from a matching request the same as any standalone skill.
+The first install adds this repo as a marketplace named `claude-skills`. Later installs can leave out `--marketplace`:
 
-**In VS Code or VSCodium**, plugin install is a graphical dialog (`/plugins` in the chat panel) rather than typed commands; see [product-management/README.md](product-management/README.md#in-vs-code-or-vscodium) for the exact steps, including VSCodium's Open VSX install path for the extension itself.
+```
+claude plugin install clean-style
+```
+
+You can install any skill on its own. Put its plugin name from this table where `product-management` is in the command above.
+
+| Plugin | Installs |
+| --- | --- |
+| `clean-style` | Clean Style |
+| `use-cases` | Use Case Builder (discovery and UML in one skill) |
+| `product-management` | All seven Product Management Pipeline skills |
+| `working-backwards-prfaq` | Working Backwards PR/FAQ |
+| `use-case-discovery` | Use Case Discovery |
+| `use-case-uml` | Use Case UML |
+| `use-case-test-cases` | Use Case Test Cases |
+| `use-case-requirements` | Use Case Requirements |
+| `architect-review` | Architect Review |
+| `build-plan` | Build Plan (for [claude-build](https://github.com/ToddE/claude-build)) |
+
+Pick the `product-management` bundle or the individual pipeline skills. The bundle already includes all seven, so installing both loads each skill twice. The pipeline skills hand off to each other when more than one is installed, and each one works alone.
+
+Installs come straight from this repo and update when it does. Run `claude plugin marketplace update` to pull the latest. The same commands work inside a session as `/plugin install ...`. Skills in the `product-management` bundle are namespaced (for example `/product-management:working-backwards-prfaq`) and still trigger automatically from a matching request.
+
+**In VS Code or VSCodium**, plugin install is a graphical dialog (`/plugins` in the chat panel) instead of typed commands. See [product-management/README.md](product-management/README.md#in-vs-code-or-vscodium) for the steps, including VSCodium's Open VSX install path for the extension itself.
 
 ### Option 2: Install from file (any Claude Code host)
 

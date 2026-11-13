@@ -19,6 +19,12 @@ copy, or any writing meant for people outside internal technical work.
   rhythm; two items beat three.
 - Name the specific thing instead of vague declaratives ("the implications are
   significant") or lazy extremes ("always," "never").
+- Minimize "that." Frequent use signals loose structure or extra words. To point back to
+  something just said, use "this" ("This is true," not "That is true"). For relative clauses,
+  restructure or cut: "a dashboard that only shows the gap" → "a dashboard showing only the
+  gap"; "a site that has a connection" → "a connected site"; "requires that providers
+  measure" → "requires providers to measure." Keep "that" only when no tighter phrasing
+  exists.
 - Don't use "real" as a throwaway intensifier ("a real limitation," "a real cost"). If it
   adds nothing, cut it. If you need to distinguish something from a hypothetical or
   superficial version, name that distinction directly instead of leaning on "real."
