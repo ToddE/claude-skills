@@ -64,7 +64,7 @@ You can install any skill on its own. Put its plugin name from this table where 
 
 Pick the `product-management` bundle or the individual pipeline skills. The bundle already includes all seven, so installing both loads each skill twice. The pipeline skills hand off to each other when more than one is installed, and each one works alone.
 
-Installs come straight from this repo and update when it does. Run `claude plugin marketplace update` to pull the latest. The same commands work inside a session as `/plugin install ...`. Skills in the `product-management` bundle are namespaced (for example `/product-management:working-backwards-prfaq`) and still trigger automatically from a matching request.
+Installs come straight from this repo and update when it does. Run `claude plugin marketplace update` to pull the latest. The same commands work inside a session as `/plugin install ...`. Each skill is namespaced by the plugin it came from, for example `/product-management:build-plan` from the bundle or `/build-plan:build-plan` from the single-skill plugin. Skills still trigger automatically from a matching request.
 
 **In VS Code or VSCodium**, plugin install is a graphical dialog (`/plugins` in the chat panel) instead of typed commands. See [product-management/README.md](product-management/README.md#in-vs-code-or-vscodium) for the steps, including VSCodium's Open VSX install path for the extension itself.
 

@@ -34,9 +34,10 @@ This installs all seven skills. To install only some, use the skill's own plugin
 
 For example, `claude plugin install build-plan --marketplace ToddE/claude-skills`. Choose the bundle or the individual plugins. The bundle already contains all seven skills. Run `claude plugin marketplace update` later to pull new versions.
 
-Skills inside the bundle are namespaced, e.g. `/product-management:working-backwards-prfaq`,
-but still trigger automatically from a matching request the same as any standalone skill;
-the namespace only matters if you want to invoke one by name directly.
+Each skill is namespaced by the plugin it came from: `/product-management:working-backwards-prfaq`
+from the bundle, or `/working-backwards-prfaq:working-backwards-prfaq` from the single-skill
+plugin. Skills still trigger automatically from a matching request. The namespace only
+matters if you want to invoke one by name directly.
 
 > **Name collision risk**: "working-backwards-prfaq" isn't a unique skill name. A live test
 > found that in a session where another skill of the same name is also installed (in that
@@ -68,8 +69,9 @@ Code forks (this is Anthropic's documented, supported path for forks, not a work
 Once installed, type `/plugins` in the chat panel to open **Manage plugins**:
 1. **Marketplaces** tab &rarr; add a marketplace &rarr; enter `ToddE/claude-skills` (or a
    local path if you're working from a checkout).
-2. **Plugins** tab &rarr; find `product-management` (and `clean-style` separately, since
-   it's a different plugin in the same marketplace) &rarr; **Install**.
+2. **Plugins** tab &rarr; find `product-management` for all seven skills, or any single-skill
+   plugin from the table above &rarr; **Install**. `clean-style` is a separate plugin in the
+   same marketplace.
 
 This is a graphical dialog, not the typed `/plugin marketplace add` command; the extension
 exposes plugin management this way instead. Once installed, skills trigger automatically
